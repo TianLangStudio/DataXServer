@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<engine>
+	<pluginrootpath>d:\\work\\datax\\plugins\\</pluginrootpath>
+	<version>1</version>
+	<storage>
+		<class>com.taobao.datax.engine.storage.RAMStorage</class>
+		<linelimit>3000</linelimit>
+		<bytelimit>1000000</bytelimit>
+		<buffersize>50</buffersize>
+	</storage>
+	<schedule>
+		<url>
+			http://skynet.alibaba-inc.com:8080/dwgps/datax/addLog.htm
+		</url>
+	</schedule>
+</engine>

@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugins>
+	<plugin>
+		<!-- the version of this plugin -->
+		<version>1</version>
+		<!-- the name of this plugin, it must be unique in this file -->
+		<name>mysqlreader</name>
+		<!-- reader | writer | spliter -->
+		<type>reader</type>
+		<!-- mysql | oracle | hdfs | feitian -->
+		<target>mysql</target>
+		<!-- the jar's filename -->
+		<jar>mysqlreader-1.0.0.jar</jar>
+		<!-- pulgin's class name, must include package path -->
+		<class>com.taobao.datax.plugins.reader.mysqlreader.MysqlReader</class>
+		<!-- max concurrency the plugin can support -->
+		<maxthreadnum>10</maxthreadnum>
+	</plugin>
+	
+	<plugin>
+		<version>1</version>
+		<name>oraclereader</name>
+		<type>reader</type>
+		<target>oracle</target>
+		<jar>oraclereader-1.0.0.jar</jar>
+		<class>com.taobao.datax.plugins.reader.oraclereader.OracleReader</class>
+		<maxthreadnum>40</maxthreadnum>
+	</plugin>
+	<plugin>
+		<version>1</version>
+		<name>streamreader</name>
+		<type>reader</type>
+		<target>stream</target>
+		<jar>streamreader-1.0.0.jar</jar>
+		<class>com.taobao.datax.plugins.reader.streamreader.StreamReader</class>
+		<maxthreadnum>40</maxthreadnum>
+	</plugin>
+    
+	<plugin>
+		<version>1</version>
+		<name>httpreader</name>
+		<type>reader</type>
+		<target>http</target>
+		<jar>httpreader-1.0.0.jar</jar>
+		<class>com.taobao.datax.plugins.reader.httpreader.HttpReader</class>
+		<maxthreadnum>40</maxthreadnum>
+	</plugin>
+	<plugin>
+		<version>1</version>
+		<name>sqlserverreader</name>
+		<type>reader</type>
+		<target>sqlserver</target>
+		<jar>sqlserverreader-1.0.0.jar</jar>
+		<class>com.taobao.datax.plugins.reader.sqlserverreader.SqlServerReader</class>
+		<maxthreadnum>10</maxthreadnum>
+	</plugin>
+
+	<plugin>
+		<version>1</version>
+		<name>hdfsreader</name>
+		<type>reader</type>
+		<target>hdfs</target>
+		<jar>hdfsreader-1.0.0.jar</jar>
+		<class>com.taobao.datax.plugins.reader.hdfsreader.HdfsReader</class>
+		<maxthreadnum>10</maxthreadnum>
+	</plugin>
+	
+   <plugin>
+		<version>1</version>
+		<name>fakereader</name>
+		<type>reader</type>
+		<target>fake</target>
+		<jar>fakereader-1.0.0.jar</jar>
+		<class>com.taobao.datax.plugins.reader.fakereader.FakeReader</class>
+		<maxthreadnum>10</maxthreadnum>
+	</plugin>
+
+	<plugin>
+		<version>1</version>
+		<name>hdfswriter</name>
+		<type>writer</type>
+		<target>hdfs</target>
+		<jar>hdfswriter-1.0.0.jar</jar>
+		<class>com.taobao.datax.plugins.writer.hdfswriter.HdfsWriter</class>
+		<maxthreadnum>10</maxthreadnum>
+	</plugin>
+	<plugin>
+		<version>1</version>
+		<name>oraclewriter</name>
+		<type>writer</type>
+		<target>oracle</target>
+		<jar>oraclewriter-1.0.0.jar</jar>
+		<class>com.taobao.datax.plugins.writer.oraclewriter.OracleWriter</class>
+		<maxthreadnum>40</maxthreadnum>
+	</plugin>
+	<plugin>
+		<version>1</version>
+		<name>mysqlwriter</name>
+		<type>writer</type>
+		<target>mysql</target>
+		<jar>mysqlwriter-1.0.0.jar</jar>
+		<class>com.taobao.datax.plugins.writer.mysqlwriter.MysqlWriter</class>
+		<maxthreadnum>10</maxthreadnum>
+	</plugin>
+	<plugin>
+		<version>1</version>
+		<name>streamwriter</name>
+		<type>writer</type>
+		<target>stream</target>
+		<jar>streamwriter-1.0.0.jar</jar>
+		<class>com.taobao.datax.plugins.writer.streamwriter.StreamWriter</class>
+		<maxthreadnum>10</maxthreadnum>
+	</plugin>
+    <plugin>
+            <version>1</version>
+            <name>hbasewriter</name>
+            <type>writer</type>
+            <target>hbase</target>
+            <jar>hbasewriter-1.0.0.jar</jar>
+            <class>com.taobao.datax.plugins.writer.hbasewriter.HBaseWriter</class>
+            <maxthreadnum>10</maxthreadnum>
+    </plugin>
+    <plugin>
+            <version>1</version>
+            <name>hbasereader</name>
+            <type>reader</type>
+            <target>hbase</target>
+            <jar>hbasereader-1.0.0.jar</jar>
+            <class>com.taobao.datax.plugins.reader.hbasereader.HBaseReader</class>
+            <maxthreadnum>10</maxthreadnum>
+    </plugin>
+    <plugin>
+		<version>1</version>
+		<name>panguwriter</name>
+		<type>writer</type>
+		<target>pangu</target>
+		<jar>hdfswriter-1.0.0.jar</jar>
+		<class>com.taobao.datax.plugins.writer.hdfswriter.PanguWrapper</class>
+		<maxthreadnum>10</maxthreadnum>
+	</plugin>
+    <plugin>
+        <version>1</version>
+        <name>postgrereader</name>
+        <type>reader</type>
+        <target>postgre</target>
+        <jar>postgrereader-1.0.0.jar</jar>
+        <class>com.taobao.datax.plugins.reader.postgrereader.PostgreReader</class>
+        <maxthreadnum>10</maxthreadnum>
+    </plugin>
+
+    <plugin>
+        <version>1</version>
+        <name>postgrewriter</name>
+        <type>writer</type>
+        <target>postgre</target>
+        <jar>postgrewriter-1.0.0.jar</jar>
+        <class>com.taobao.datax.plugins.writer.postgrewriter.PostgreWriter</class>
+        <maxthreadnum>10</maxthreadnum>
+    </plugin>
+</plugins>
