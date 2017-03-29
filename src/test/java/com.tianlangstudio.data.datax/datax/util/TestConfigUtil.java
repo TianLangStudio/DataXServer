@@ -1,4 +1,4 @@
-package esun.fbi.datax;
+package com.tianlangstudio.data.datax;
 
 import java.io.File;
 import java.util.HashMap;
@@ -7,7 +7,7 @@ import java.util.Map;
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 
-import esun.fbi.datax.util.ConfigUtil;
+import com.tianlangstudio.data.datax.util.ConfigUtil;
 
 /**
  * Created by zhuhq on 2015/12/14.

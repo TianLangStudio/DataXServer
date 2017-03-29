@@ -1,4 +1,4 @@
-namespace java esun.fbi.datax.ext.thrift
+namespace java com.tianlangstudio.data.datax.ext.thrift
 struct TaskCost{
     1:string beginTime
     2:string entTime

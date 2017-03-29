@@ -1,13 +1,13 @@
-package esun.fbi.datax.ext;
+package com.tianlangstudio.data.datax.ext;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import esun.fbi.datax.ext.thrift.TaskCost;
-import esun.fbi.datax.ext.thrift.TaskResult;
-import esun.fbi.datax.ext.thrift.ThriftServer;
-import esun.fbi.datax.main.ThriftServerMain;
+import com.tianlangstudio.data.datax.ext.thrift.TaskCost;
+import com.tianlangstudio.data.datax.ext.thrift.TaskResult;
+import com.tianlangstudio.data.datax.ext.thrift.ThriftServer;
+import com.tianlangstudio.data.datax.main.ThriftServerMain;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.thrift.TException;
@@ -28,14 +28,14 @@ public class ThriftServerTest {
     public void testSubmitJob() throws Exception {
 
 
-        TTransport transport = new TSocket("192.168.41.225",9777);
+        TTransport transport = new TSocket("127.0.0.1",9777);
         TProtocol protocol = new TBinaryProtocol(transport);
         ThriftServer.Client client = new ThriftServer.Client(protocol);
         transport.open();
-        String taskId1 = client.submitJob("/home/datax/datax/jobs/postgrereader_to_mysqlwriter_zhuhq.xml");
-        String taskId2 = client.submitJob("/home/datax/datax/jobs/postgrereader_to_oraclewriter_zhuhq.xml");
+        String taskId1 = client.submitJob("/data1/code/github/DataX/target/datax/datax/stream2stream.json");
+        //String taskId2 = client.submitJob("/home/datax/datax/jobs/postgrereader_to_oraclewriter_zhuhq.xml");
         System.out.println(taskId1);
-        System.out.println(taskId2);
+        //System.out.println(taskId2);
         transport.close();
 
     }
@@ -63,7 +63,7 @@ public class ThriftServerTest {
         TProtocol protocol = new TBinaryProtocol(transport);
         ThriftServer.Client client = new ThriftServer.Client(protocol);
         transport.open();
-        TaskResult taskResult1 = client.getJobResult("a4cc523c-c48d-4402-b62b-d1fc42e2236c");
+        TaskResult taskResult1 = client.getJobResult("4956993821621");
         //TaskResult taskResult2 = client.getJobResult("127.0.0.1:9777/2d2b61vxwdo");
         System.out.println(taskResult1==null?"":taskResult1.success + " " + taskResult1.msg);
         //System.out.println(taskResult2==null?"":taskResult2.getMsg());
@@ -71,6 +71,8 @@ public class ThriftServerTest {
     }
     @Test
     public void startServer() throws Exception {
+        //System.setProperty("datax.home", "/data1/code/github/DataX/target/datax/datax");
+        System.out.println(System.getProperty("datax.home"));
         thriftServerMain = new ThriftServerMain();
         thriftServerMain.start(4,"127.0.0.1",9777);
     }

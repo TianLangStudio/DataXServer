@@ -25,6 +25,7 @@
       <akka.group>com.typesafe.akka</akka.group>
       <akka.version>2.3.11</akka.version>
       <java.version>1.8</java.version>
+      <datax.version>0.0.1-SNAPSHOT</datax.version>
       <PermGen>64m</PermGen>
       <MaxPermGen>512m</MaxPermGen>
       <CodeCacheSize>512m</CodeCacheSize>
@@ -49,7 +50,7 @@
           <artifactId>libthrift</artifactId>
           <version>0.10.0</version>
       </dependency>
-      <dependency>
+      <!--dependency>
           <groupId>com.taobao.datax</groupId>
           <artifactId>engine</artifactId>
           <version>1.0.6</version>
@@ -58,6 +59,21 @@
           <groupId>com.taobao.datax</groupId>
           <artifactId>common</artifactId>
           <version>1.0.3</version>
+      </dependency-->
+      <dependency>
+          <groupId>com.alibaba.datax</groupId>
+          <artifactId>datax-common</artifactId>
+          <version>${datax.version}</version>
+      </dependency>
+      <dependency>
+          <groupId>com.alibaba.datax</groupId>
+          <artifactId>datax-core</artifactId>
+          <version>${datax.version}</version>
+      </dependency>
+      <dependency>
+          <groupId>com.alibaba.datax</groupId>
+          <artifactId>datax-transformer</artifactId>
+          <version>${datax.version}</version>
       </dependency>
       <dependency>
           <groupId>org.apache.commons</groupId>
@@ -115,7 +131,7 @@
           <artifactId>dom4j</artifactId>
           <version>2.0.0-RC1</version>
       </dependency>
-      <dependency>
+      <!--dependency>
           <groupId>mysql</groupId>
           <artifactId>mysql-connector-java</artifactId>
           <version>5.1.18</version>
@@ -124,7 +140,7 @@
           <groupId>org.postgresql</groupId>
           <artifactId>postgresql</artifactId>
           <version>9.4-1201-jdbc41</version>
-      </dependency>
+      </dependency-->
       <dependency>
           <groupId>junit</groupId>
           <artifactId>junit</artifactId>
@@ -151,12 +167,12 @@
           <artifactId>config</artifactId>
           <version>1.2.1</version>
       </dependency>
-      <dependency>
+      <!--dependency>
           <groupId>com.oracle</groupId>
           <artifactId>ojdbc14</artifactId>
           <version>10.2.0.4.0</version>
           <type>jar</type>
-      </dependency>
+      </dependency-->
       <dependency>
           <groupId>${akka.group}</groupId>
           <artifactId>akka-remote_${scala.binary.version}</artifactId>
@@ -180,9 +196,19 @@
       </dependency-->
   </dependencies>
   <build>
+      <resources>
+          <resource>
+              <directory>src/main/resources</directory>
+          </resource>
+      </resources>
+      <testResources>
+          <testResource>
+              <directory>src/test/resources</directory>
+          </testResource>
+      </testResources>
       <outputDirectory>target/scala-${scala.binary.version}/classes</outputDirectory>
       <testOutputDirectory>target/scala-${scala.binary.version}/test-classes</testOutputDirectory>
-
+<!--
       <resources>
           <resource>
               <directory>src/main/resources</directory>
@@ -201,7 +227,7 @@
               </excludes>
           </resource>
 
-      </resources>
+      </resources>-->
     <plugins>
     <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -217,7 +243,38 @@
         <artifactId>build-helper-maven-plugin</artifactId>
         <version>1.9.1</version>
       </plugin>
-      <plugin>
+        <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <executions>
+        <!--execution>
+            <id>add-default-sources</id>
+            <phase>generate-sources</phase>
+            <goals>
+                <goal>add-source</goal>
+            </goals>
+            <configuration>
+                <sources>
+                    <source>v${hive.version.short}/src/main/scala</source>
+                </sources>
+            </configuration>
+        </execution-->
+        <execution>
+        <id>add-source</id>
+            <phase>generate-sources</phase>
+            <goals>
+                <goal>add-source</goal>
+            </goals>
+            <configuration>
+                <sources>
+                    <source>src/main/thrift/gen-java</source>
+                </sources>
+            </configuration>
+        </execution>
+        </executions>
+        </plugin>
+
+        <!--plugin>
         <groupId>org.apache.thrift.tools</groupId>
         <artifactId>maven-thrift-plugin</artifactId>
         <version>0.1.11</version>
@@ -240,7 +297,7 @@
                 </goals>
             </execution>
         </executions>
-      </plugin>
+      </plugin-->
         <plugin>
             <groupId>net.alchim31.maven</groupId>
             <artifactId>scala-maven-plugin</artifactId>
