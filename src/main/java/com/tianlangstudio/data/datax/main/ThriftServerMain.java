@@ -6,41 +6,49 @@ import com.typesafe.config.ConfigFactory;
 import com.tianlangstudio.data.datax.exception.DataXException;
 import com.tianlangstudio.data.datax.ext.server.ThriftServerHandler;
 import com.tianlangstudio.data.datax.ext.thrift.ThriftServer;
-import org.apache.log4j.Logger;
 import org.apache.thrift.TProcessor;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.server.TServer;
 import org.apache.thrift.server.TThreadPoolServer;
 import org.apache.thrift.transport.TServerSocket;
 import org.apache.thrift.transport.TServerTransport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by zhuhq on 2015/11/30.
  */
 public class ThriftServerMain {
-    private static final Logger logger = Logger.getLogger(ThriftServerMain.class);
+    private static final Logger logger = LoggerFactory.getLogger(ThriftServerMain.class);
+    private static TServer server;
+
     public static void start(int concurrence,String server,int port){
         start(concurrence,server,port,new ThriftServerHandler(concurrence,server, port));
     }
     public static void start(int concurrence,String host,int port,ThriftServer.Iface handler) {
+        if(server != null && server.isServing()) {
+            return;
+        }
         try {
-            System.out.println("start begin");
+            logger.info("=======start begin=======");
             TServerTransport serverTransport = new TServerSocket(port);
             TBinaryProtocol.Factory proFactory = new TBinaryProtocol.Factory();
             TProcessor processor = new ThriftServer.Processor(handler);
-            TServer server = new TThreadPoolServer(
+            server = new TThreadPoolServer(
                     new TThreadPoolServer.Args(serverTransport).protocolFactory(proFactory).processor(processor)
             );
-            System.out.println("start thrift server begin");
+            logger.info("=======start thrift server begin====");
             server.serve();
-            System.out.println("start thrift server on port:" + port);
+            logger.info("=======start thrift server on port:{}======", port);
         }catch (Exception ex) {
-            System.out.println("start server error:" + ex.getMessage());
-            logger.error("error:",ex);
-            ex.printStackTrace();
+            logger.error("start server error:",ex);
             throw new DataXException(ex);
-            //System.exit(1);
         }
+        logger.info("******start success******");
+    }
+
+    public static void stop() {
+        server.stop();
     }
     public static  void main(String args[]) throws Exception{
         Config config  = ConfigFactory.load();

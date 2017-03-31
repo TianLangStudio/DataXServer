@@ -11,6 +11,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.log4j.Logger;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.*;
 
@@ -124,7 +125,12 @@ public class Task implements Callable<TaskResult> {
     }
     private static int idSeq = 0;
     public static String genId(Worker worker) {
-        return ++idSeq + "";
+        Calendar now = Calendar.getInstance();
+        int hour = now.get(Calendar.HOUR_OF_DAY);
+        int min = now.get(Calendar.MINUTE);
+        int seconds  = now.get(Calendar.SECOND);
+        int ms = now.get(Calendar.MILLISECOND);
+        return (hour * 3600 * 1000 + min * 60 * 1000 + seconds * 1000 + ms) + "";
         //return worker.getServer() +":"+ worker.getServerPort()+"/" + Long.toString(System.nanoTime(), 36);
     }
 

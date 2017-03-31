@@ -9,6 +9,7 @@ import com.tianlangstudio.data.datax.ext.thrift.TaskResult;
 import com.tianlangstudio.data.datax.ext.thrift.ThriftServer;
 import com.tianlangstudio.data.datax.main.ThriftServerMain;
 
+import com.typesafe.config.ConfigFactory;
 import org.apache.commons.io.FileUtils;
 import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TBinaryProtocol;
@@ -16,13 +17,40 @@ import org.apache.thrift.protocol.TProtocol;
 import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TTransport;
 import org.apache.thrift.transport.TTransportException;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by zhuhq on 2015/12/2.
  */
 public class ThriftServerTest {
-    private ThriftServerMain thriftServerMain;
+    private final static Logger logger = LoggerFactory.getLogger(ThriftServerTest.class);
+
+
+    @BeforeClass
+    public static void startServer() throws Exception {
+
+        String dataxHome = ConfigFactory.load().getString("datax.home");
+        System.setProperty("datax.home", dataxHome);
+        logger.info("datax.home:{}",System.getProperty("datax.home"));
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ThriftServerMain.start(4,"127.0.0.1",9777);
+            }
+        }).start();
+        Thread.sleep(3000);
+
+    }
+
+    @AfterClass
+    public static void stopServer() {
+        ThriftServerMain.stop();
+    }
 
     @Test
     public void testSubmitJob() throws Exception {
@@ -69,13 +97,7 @@ public class ThriftServerTest {
         //System.out.println(taskResult2==null?"":taskResult2.getMsg());
         transport.close();
     }
-    @Test
-    public void startServer() throws Exception {
-        //System.setProperty("datax.home", "/data1/code/github/DataX/target/datax/datax");
-        System.out.println(System.getProperty("datax.home"));
-        thriftServerMain = new ThriftServerMain();
-        thriftServerMain.start(4,"127.0.0.1",9777);
-    }
+
     @Test
     public void testGetJobCost() throws Exception{
         TTransport transport = new TSocket("192.168.41.225",9777);
