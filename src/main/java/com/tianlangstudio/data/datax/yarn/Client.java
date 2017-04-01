@@ -30,15 +30,14 @@ import org.apache.hadoop.yarn.util.Records;
 
 public class Client {
 
-  Configuration conf = new YarnConfiguration();
-  
-  public void run(String[] args) throws Exception {
-    final String command = args[0];
-    final int n = Integer.valueOf(args[1]);
-    final Path jarPath = new Path(args[2]);
+  private YarnConfiguration conf;
 
+  public Client(YarnConfiguration conf) {
+    this.conf = conf;
+  }
+  
+  public void run(Path jarPath) throws Exception {
     // Create yarnClient
-    YarnConfiguration conf = new YarnConfiguration();
     YarnClient yarnClient = YarnClient.createYarnClient();
     yarnClient.init(conf);
     yarnClient.start();
@@ -115,19 +114,17 @@ public class Client {
   }
   
   private void setupAppMasterEnv(Map<String, String> appMasterEnv) {
-    for (String c : conf.getStrings(
-        YarnConfiguration.YARN_APPLICATION_CLASSPATH,
-        YarnConfiguration.DEFAULT_YARN_APPLICATION_CLASSPATH)) {
-      Apps.addToEnvironment(appMasterEnv, Environment.CLASSPATH.name(),
-          c.trim());
+    String pathSeparator = File.pathSeparator;
+    for (String c : conf.getStrings(YarnConfiguration.YARN_APPLICATION_CLASSPATH, YarnConfiguration.DEFAULT_YARN_APPLICATION_CLASSPATH)) {
+      Apps.addToEnvironment(appMasterEnv, Environment.CLASSPATH.name(), c.trim(), pathSeparator);
     }
-    Apps.addToEnvironment(appMasterEnv,
-        Environment.CLASSPATH.name(),
-        Environment.PWD.$() + File.separator + "*");
+    Apps.addToEnvironment(appMasterEnv, Environment.CLASSPATH.name(), Environment.PWD.$() + File.separator + "*", pathSeparator);
   }
   
   public static void main(String[] args) throws Exception {
-    Client c = new Client();
-    c.run(args);
+    YarnConfiguration conf = new YarnConfiguration();
+    Client c = new Client(conf);
+    Path jarPath = new Path(args[0]);
+    c.run(jarPath);
   }
 }
