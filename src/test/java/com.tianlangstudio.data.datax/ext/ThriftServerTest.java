@@ -31,6 +31,7 @@ public class ThriftServerTest {
     private final static Logger logger = LoggerFactory.getLogger(ThriftServerTest.class);
 
 
+
     @BeforeClass
     public static void startServer() throws Exception {
 
@@ -46,6 +47,7 @@ public class ThriftServerTest {
         Thread.sleep(3000);
 
     }
+
 
     @AfterClass
     public static void stopServer() {

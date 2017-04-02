@@ -6,11 +6,10 @@ import java.util.UUID
 import akka.pattern.ask
 import akka.actor.ActorRef
 import akka.util.Timeout
-
-import com.tianlangstudio.data.datax.{JobInfo, Constants}
+import com.tianlangstudio.data.datax.{Constants, JobInfo}
 import com.tianlangstudio.data.datax.ext.thrift.{TaskCost, TaskResult, ThriftServer}
-import com.tianlangstudio.data.datax.util.ConfigUtil
-import com.tianlangstudio.data.datax.{GetJobResult, CancelJob, GetJobStatus, SubmitJob}
+import com.tianlangstudio.data.datax.util.{ConfigUtil, Utils}
+import com.tianlangstudio.data.datax.{CancelJob, GetJobResult, GetJobStatus, SubmitJob}
 import org.apache.commons.codec.digest.DigestUtils
 
 import scala.concurrent.Await
@@ -42,7 +41,8 @@ class AkkaThriftServerHandler(jobSchedulerActor:ActorRef) extends ThriftServer.I
   override def submitJobWithParams(jobConfPath: String, params: util.Map[String, String]): String = {
     //val jobId = UUID.randomUUID().toString
     val jobDesc = ConfigUtil.readJobDescIfInFileAndReplaceHolder(jobConfPath,params)
-    val jobId = DigestUtils.md5Hex(jobDesc);
+    //val jobId = DigestUtils.md5Hex(jobDesc);
+    val jobId = Utils.genJobId()
     jobSchedulerActor ! SubmitJob(jobId,jobDesc)
     jobId
   }

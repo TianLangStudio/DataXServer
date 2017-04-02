@@ -25,6 +25,7 @@ object Constants {
   val DATAX_EXECUTOR_ARCHIVE_FILE_NAME = "archive"
   val DATAX_EXECUTOR_CORES="datax.executor.cores"
   val DATAX_EXECUTOR_APPLY_LOCAL_FIRST="datax.executor.apply.local.first"
+  val DATAX_HOME = "datax.home"
   val THRIFT_SERVER_HOST="server.ip"
   val THRIFT_SERVER_PORT="server.port"
   val THRIFT_SERVER_CONCURRENCE="server.concurrence"
@@ -33,4 +34,7 @@ object Constants {
   val PLACEHOLDER_EXECUTOR_ID = "VAR_EXECUTOR_ID"
   val EXECUTOR_RUN_ON_TYPE_LOCAL = "local"
   val EXECUTOR_RUN_ON_TYPE_YARN = "yarn"
+  val RUN_ENV = "env"
+  val RUN_ENV_DEVELOPMENT = "dev"
+  val RUN_ENV_PRODUCTION = "pro"
 }
