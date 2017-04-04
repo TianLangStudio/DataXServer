@@ -3,34 +3,50 @@ package com.tianlangstudio.data.datax.yarn
 import java.io.{File, PrintWriter}
 import java.nio.charset.Charset
 import java.util
-import java.util.{UUID, Collections}
+import java.util.{Collections, UUID}
 
 import akka.actor.Actor.Receive
-import akka.actor.{ActorLogging, Actor, Props}
+import akka.actor.{Actor, ActorLogging, Props}
 import akka.event.AddressTerminatedTopic
-import com.typesafe.config.{ConfigFactory, Config}
-import com.tianlangstudio.data.datax.{Executor, Constants, DataxConf, JobScheduler}
+import com.typesafe.config.{Config, ConfigFactory}
+import com.tianlangstudio.data.datax.{Constants, DataxConf, Executor, JobScheduler}
 import com.tianlangstudio.data.datax.main.ThriftServerMain
 import com.tianlangstudio.data.datax.thrift.AkkaThriftServerHandler
-import com.tianlangstudio.data.datax.util.{Utils, AkkaUtils}
+import com.tianlangstudio.data.datax.util.{AkkaUtils, Utils}
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.yarn.api.ApplicationConstants
 import org.apache.hadoop.yarn.api.records._
-import org.apache.hadoop.yarn.client.api.{NMClient, AMRMClient}
+import org.apache.hadoop.yarn.client.api.{AMRMClient, NMClient}
 import org.apache.hadoop.yarn.client.api.AMRMClient.ContainerRequest
 import org.apache.hadoop.yarn.client.api.async.AMRMClientAsync
 import org.apache.hadoop.yarn.conf.YarnConfiguration
 import org.apache.hadoop.yarn.util.Records
-import org.apache.log4j.PropertyConfigurator
+import org.slf4j.LoggerFactory
+
+//import org.apache.log4j.PropertyConfigurator
 
 import scala.collection.JavaConversions._
 object ApplicationMaster extends App {
+
   /**
    * 加载日志配置文件
    */
-  PropertyConfigurator.configure("masterConf/log4j.properties")
-  private val logging = org.slf4j.LoggerFactory.getLogger(classOf[ApplicationMaster])
+  //PropertyConfigurator.configure("masterConf/log4j.properties")
+  private val logger = org.slf4j.LoggerFactory.getLogger(classOf[ApplicationMaster])
+  private val rmSchAddressOpt = if(args.length > 0) {
+    Some(args(0))
+  }else {
+    None
+  }
+
   private val yarnConfiguration:Configuration = new YarnConfiguration()
+  if(rmSchAddressOpt.isDefined) {
+    yarnConfiguration.set(YarnConfiguration.RM_SCHEDULER_ADDRESS, rmSchAddressOpt.get)
+  }
+
+  logger.info("rm scheduler address:{}", yarnConfiguration.get(YarnConfiguration.RM_SCHEDULER_ADDRESS))
+  logger.info(s"yarn configuration:$yarnConfiguration")
+
   //yarnConfiguration.setInt(YarnConfiguration.RM_AM_EXPIRY_INTERVAL_MS,1000 * 60 * 60 * 2)//设置单个 application超时时间 未起作用
 
   private val dataxConf:DataxConf = new DataxConf()
@@ -49,22 +65,38 @@ object ApplicationMaster extends App {
   executorPriority.setPriority(0)
   executorPriority = Records.newRecord(classOf[Priority])
 
-  logging.info("create master actor system begin");
+  logger.info("create master actor system begin");
   val schedulerHost = dataxConf.getString(Constants.DATAX_MASTER_HOST,"127.0.0.1")
+  logger.info("scheduler host:{}", schedulerHost);
   val (schedulerSystem,port) = AkkaUtils.createActorSystem(Constants.AKKA_JOB_SCHEDULER_SYSTEM,schedulerHost,0,dataxConf)
-  logging.info("create master actor system end");
+  logger.info("create master actor system end");
   sys.addShutdownHook{
     schedulerSystem.shutdown()
   }
   private val jobSchedulerHostPost:String = s"${dataxConf.getString(Constants.DATAX_MASTER_HOST)}:$port"
   private val archiveName = Constants.DATAX_EXECUTOR_ARCHIVE_FILE_NAME
-  private val executorCP = dataxConf.getString(
-    Constants.DATAX_EXECUTOR_CP,
-    s"$archiveName/*:$archiveName/lib/*:$archiveName/common/*:$archiveName/conf/*:$archiveName/datax/*:$archiveName/datax/lib/*:$archiveName/datax/common/*:$archiveName/datax/conf/*"
-  )
+  private val dataxHome = dataxConf.getString(Constants.DATAX_HOME, ApplicationConstants.Environment.PWD.$())
+
+  private val runEnv = dataxConf.getString(Constants.RUN_ENV, Constants.RUN_ENV_PRODUCTION).toLowerCase()
+
+  private val (executorCP, executorLocalCmd) = if(Constants.RUN_ENV_DEVELOPMENT.equals(runEnv)) {
+    val classPath = System.getProperty("java.class.path")
+    val localCmd =  s"java -classpath $classPath " +
+              s" -Ddatax.home=$dataxHome -Xms512M -Xmx1024M " +
+              s" -XX:PermSize=128M -XX:MaxPermSize=512M com.tianlangstudio.data.datax.Executor "
+    (classPath, localCmd)
+  }else {
+    val classPath = dataxConf.getString(
+      Constants.DATAX_EXECUTOR_CP,
+      s"$archiveName/*:$archiveName/lib/*:$archiveName/common/*:$archiveName/conf/*:$archiveName/datax/*:$archiveName/datax/lib/*:$archiveName/datax/common/*:$archiveName/datax/conf/*"
+    )
+    val localCmd  = dataxConf.getString(Constants.DATAX_EXECUTOR_LOCAL_CMD, "./startLocalExecutor.sh")
+    (classPath, localCmd)
+  }
+
   private val executorCmd:String = dataxConf.getString(
                 Constants.DATAX_EXECUTOR_CMD,
-                s"java -classpath $executorCP -Xms512M -Xmx1024M -XX:PermSize=128M -XX:MaxPermSize=512M com.tianlangstudio.data.datax.Executor "
+                s"java -classpath $executorCP -Ddatax.home=$dataxHome -Xms512M -Xmx1024M -XX:PermSize=128M -XX:MaxPermSize=512M com.tianlangstudio.data.datax.Executor "
               ) +
               s" $jobSchedulerHostPost ${Constants.PLACEHOLDER_EXECUTOR_ID} ${Constants.EXECUTOR_RUN_ON_TYPE_YARN}" +
               s" 1> ${ApplicationConstants.LOG_DIR_EXPANSION_VAR}/stdout " +
@@ -75,11 +107,11 @@ object ApplicationMaster extends App {
     hostPortWriter.close()
   }catch {
     case ex:Throwable =>
-      logging.error("writer host port error",ex)
+      logger.error("writer host port error",ex)
 
   }
 
-  logging.info("executor cmd:" + executorCmd)
+  logger.info("executor cmd:" + executorCmd)
   def getContainerCmd(container: Container) = {
     val executorId = Utils.containerIdNodeId2ExecutorId(container.getId,container.getNodeId)
     executorCmd.replace(Constants.PLACEHOLDER_EXECUTOR_ID,executorId)
@@ -91,9 +123,9 @@ object ApplicationMaster extends App {
 
   amrmClientAsync.start()
 
-  logging.info("register application master begin")
+  logger.info("register application master begin")
   amrmClientAsync.registerApplicationMaster("",0,"")
-  logging.info("register application master end")
+  logger.info("register application master end")
   nmClient.init(yarnConfiguration)
   nmClient.start();
   sys.addShutdownHook{
@@ -105,15 +137,15 @@ object ApplicationMaster extends App {
   val jobSchedulerActor = schedulerSystem.actorOf(Props(classOf[JobScheduler],dataxConf,amActor),Constants.AKKA_JOB_SCHEDULER_ACTOR)
   jobSchedulerActor ! "jobSchedulerActor started"
 
-  logging.info(s"address:${jobSchedulerActor.path.address.hostPort}   ${jobSchedulerActor.path}  ${jobSchedulerActor.path.address}")
+  logger.info(s"address:${jobSchedulerActor.path.address.hostPort}   ${jobSchedulerActor.path}  ${jobSchedulerActor.path.address}")
 
-  logging.info(s"start thrift server begin")
+  logger.info(s"start thrift server begin")
   val thriftPort = dataxConf.getInt(Constants.THRIFT_SERVER_PORT,9777)
   val thriftHost = dataxConf.getString(Constants.THRIFT_SERVER_HOST,"127.0.0.1")
   val thriftConcurrence = dataxConf.getInt(Constants.THRIFT_SERVER_CONCURRENCE,8)
   val thriftServerHandler = new AkkaThriftServerHandler(jobSchedulerActor)
 
-  logging.info(s"start thrift server on  $thriftHost:$thriftPort")
+  logger.info(s"start thrift server on  $thriftHost:$thriftPort")
   try{
     ThriftServerMain.start(thriftConcurrence,thriftHost,thriftPort,thriftServerHandler)
   }catch {
@@ -136,7 +168,7 @@ class ApplicationMaster(
                          ) extends Actor with ActorLogging{
 
 
-  val containerLocalCmd = dataxConf.getString(Constants.DATAX_EXECUTOR_LOCAL_CMD, "D:\\datax\\startExecutor.bat")
+  val containerLocalCmd = ApplicationMaster.executorLocalCmd
   def applyExecutor(count:Int = 1) = {
     applyExecutorYarn(count)
   }

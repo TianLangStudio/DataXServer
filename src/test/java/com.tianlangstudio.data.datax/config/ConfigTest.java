@@ -1,4 +1,4 @@
-package esun.fbi.config;
+package com.tianlangstudio.data.datax.config;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigException;

@@ -2,7 +2,7 @@ package com.tianlangstudio.data.datax.local
 
 import java.util.UUID
 
-import akka.actor.{ActorLogging, Props, Actor}
+import akka.actor.{Actor, ActorLogging, Props}
 import akka.actor.Actor.Receive
 import com.tianlangstudio.data.datax.main.ThriftServerMain
 import com.tianlangstudio.data.datax.thrift.AkkaThriftServerHandler
@@ -10,6 +10,7 @@ import com.tianlangstudio.data.datax.yarn.ApplyExecutor
 import com.tianlangstudio.data.datax.{Constants, DataxConf}
 import com.tianlangstudio.data.datax.util.AkkaUtils
 import com.tianlangstudio.data.datax.JobScheduler
+import org.slf4j.LoggerFactory
 
 /**
  * Created by zhuhq on 2016/5/3.
@@ -35,7 +36,20 @@ object ApplicationMaster extends App{
 
 }
 class ApplicationMaster(dataxConf: DataxConf) extends Actor with ActorLogging{
-  val containerCmd = dataxConf.getString(Constants.DATAX_EXECUTOR_CMD, "D:\\datax\\startExecutor.bat")
+  private val logger = LoggerFactory.getLogger(getClass)
+  val runEnv = dataxConf.getString(Constants.RUN_ENV, Constants.RUN_ENV_PRODUCTION).toLowerCase()
+  logger.info("run env:{}", runEnv)
+  val containerCmd = if(Constants.RUN_ENV_DEVELOPMENT.equals(runEnv)) {
+    s"""
+       |java ${System.getProperty("java.class.path")}
+       | -Ddatax.home=${dataxConf.getString(Constants.DATAX_HOME)} -Xms512M -Xmx1024M
+       |  -XX:PermSize=128M -XX:MaxPermSize=512M com.tianlangstudio.data.datax.Executor
+     """.stripMargin
+  }else {
+    dataxConf.getString(Constants.DATAX_EXECUTOR_CMD, "./startLocalExecutor.sh")
+  }
+
+
   override def receive: Receive = {
     case msg:String =>
       log.info(s"${self.path} receive msg: $msg")
@@ -46,10 +60,12 @@ class ApplicationMaster(dataxConf: DataxConf) extends Actor with ActorLogging{
 
     log.info(s"apply executor num $num");
     for(i <- 0 until num) {
+
       sys.process.stringToProcess(
           containerCmd + " " +
           ApplicationMaster.schedulerHost + ":" + ApplicationMaster.schedulerPort + " " +
           UUID.randomUUID().toString).run()
+      log.info(s"apply executor ${i+1}/$num")
     }
 
   }

@@ -1,4 +1,4 @@
-package esun.fbi.metrics;
+package com.tianlangstudio.data.datax.metrics;
 
 import com.codahale.metrics.Histogram;
 import com.codahale.metrics.MetricRegistry;
@@ -22,14 +22,14 @@ public class TestGangliaMetrics {
                 .convertRatesTo(TimeUnit.SECONDS)
                 .convertDurationsTo(TimeUnit.MILLISECONDS)
                 .build(ganglia);
-        reporter.start(10, TimeUnit.SECONDS);
+/*        reporter.start(10, TimeUnit.SECONDS);
         Random random = new Random();
         while (true) {
             int randomInt = random.nextInt(1000);
             System.out.println("randomInt:" + randomInt);
             randomNums.update(randomInt);
             Thread.sleep(1000);
-        }
+        }*/
     }
 
 }

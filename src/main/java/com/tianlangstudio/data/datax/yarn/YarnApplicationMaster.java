@@ -17,11 +17,14 @@ import org.apache.hadoop.yarn.conf.YarnConfiguration;
 import org.apache.hadoop.yarn.util.Records;
 
 import com.tianlangstudio.data.datax.main.ThriftServerMain;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by zhuhq on 2016/4/26.
  */
 public class YarnApplicationMaster implements AMRMClientAsync.CallbackHandler {
+    private static final Logger logger = LoggerFactory.getLogger(YarnApplicationMaster.class);
 
     @Override public void onContainersCompleted(final List<ContainerStatus> list) {
 
@@ -63,9 +66,9 @@ public class YarnApplicationMaster implements AMRMClientAsync.CallbackHandler {
         rmClient.start();
 
         //Register with ResourceManager
-        System.out.println("[AM] registerApplicationMaster begin");
+        logger.info("[AM] registerApplicationMaster begin");
         rmClient.registerApplicationMaster("",0,"");
-        System.out.println("[AM] registerApplicationMaster end");
+        logger.info("[AM] registerApplicationMaster end");
 
         executorPriority.setPriority(0);
 

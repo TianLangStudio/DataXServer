@@ -123,7 +123,7 @@ public class Task implements Callable<TaskResult> {
     public String getId() {
         return  id;
     }
-    private static int idSeq = 0;
+
     public static String genId(Worker worker) {
         Calendar now = Calendar.getInstance();
         int hour = now.get(Calendar.HOUR_OF_DAY);

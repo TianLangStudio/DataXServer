@@ -1,5 +1,6 @@
 package com.tianlangstudio.data.datax.util
 import java.net.BindException
+import java.util.Calendar
 
 import com.typesafe.config.Config
 import com.tianlangstudio.data.datax.DataxConf
@@ -101,5 +102,23 @@ private[datax] object Utils {
       case _ =>
         None
     }
+  }
+
+  private val jobIdLock = new Object
+  private val preId = "";
+  def  genJobId():String = {
+    val now = Calendar.getInstance
+    val hour = now.get(Calendar.HOUR_OF_DAY)
+    val min = now.get(Calendar.MINUTE)
+    val seconds = now.get(Calendar.SECOND)
+    val ms = now.get(Calendar.MILLISECOND)
+    val id = (hour * 3600 * 1000 + min * 60 * 1000 + seconds * 1000 + ms) + ""
+    jobIdLock.synchronized(
+      if(id.equals(preId)) {
+        genJobId()
+      }else {
+        id
+      }
+    )
   }
 }

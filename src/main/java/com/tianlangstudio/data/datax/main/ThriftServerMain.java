@@ -37,9 +37,9 @@ public class ThriftServerMain {
             server = new TThreadPoolServer(
                     new TThreadPoolServer.Args(serverTransport).protocolFactory(proFactory).processor(processor)
             );
-            logger.info("=======start thrift server begin====");
+            logger.info("=======start thrift server on port:{} ======", port);
             server.serve();
-            logger.info("=======start thrift server on port:{}======", port);
+
         }catch (Exception ex) {
             logger.error("start server error:",ex);
             throw new DataXException(ex);
@@ -48,7 +48,9 @@ public class ThriftServerMain {
     }
 
     public static void stop() {
-        server.stop();
+        if(server != null && server.isServing()) {
+            server.stop();
+        }
     }
     public static  void main(String args[]) throws Exception{
         Config config  = ConfigFactory.load();
