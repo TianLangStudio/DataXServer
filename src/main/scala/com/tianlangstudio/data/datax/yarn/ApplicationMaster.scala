@@ -11,7 +11,7 @@ import akka.event.AddressTerminatedTopic
 import com.typesafe.config.{Config, ConfigFactory}
 import com.tianlangstudio.data.datax.{Constants, DataxConf, Executor, JobScheduler}
 import com.tianlangstudio.data.datax.main.ThriftServerMain
-import com.tianlangstudio.data.datax.thrift.AkkaThriftServerHandler
+import com.tianlangstudio.data.datax.thrift.AkkaThriftJobHandler
 import com.tianlangstudio.data.datax.util.{AkkaUtils, Utils}
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.yarn.api.ApplicationConstants
@@ -143,7 +143,7 @@ object ApplicationMaster extends App {
   val thriftPort = dataxConf.getInt(Constants.THRIFT_SERVER_PORT,9777)
   val thriftHost = dataxConf.getString(Constants.THRIFT_SERVER_HOST,"127.0.0.1")
   val thriftConcurrence = dataxConf.getInt(Constants.THRIFT_SERVER_CONCURRENCE,8)
-  val thriftServerHandler = new AkkaThriftServerHandler(jobSchedulerActor)
+  val thriftServerHandler = new AkkaThriftJobHandler(jobSchedulerActor)
 
   logger.info(s"start thrift server on  $thriftHost:$thriftPort")
   try{

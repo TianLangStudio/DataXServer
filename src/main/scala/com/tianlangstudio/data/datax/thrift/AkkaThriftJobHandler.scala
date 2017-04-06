@@ -15,11 +15,12 @@ import org.apache.commons.codec.digest.DigestUtils
 import scala.concurrent.Await
 import scala.concurrent.duration._
 import com.tianlangstudio.data.datax.JobInfo._
+import com.tianlangstudio.data.datax.server.akka.AkkaJobHandler
 /**
  * Created by zhuhq on 2016/4/27.
  */
-class AkkaThriftServerHandler(jobSchedulerActor:ActorRef) extends ThriftServer.Iface{
-  implicit val timeout = Timeout(30 seconds)
+class AkkaThriftJobHandler(jobSchedulerActor:ActorRef) extends AkkaJobHandler(jobSchedulerActor = jobSchedulerActor) with ThriftServer.Iface{
+
   override def submitJob(jobConfPath: String): String = {
     submitJobWithParams(jobConfPath,null)
   }

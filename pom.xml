@@ -23,7 +23,8 @@
       <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
       <metrics.version>3.1.2</metrics.version>
       <akka.group>com.typesafe.akka</akka.group>
-      <akka.version>2.3.11</akka.version>
+      <akka.version>2.4.17</akka.version>
+      <akka.http.version>10.0.5</akka.http.version>
       <java.version>1.8</java.version>
       <datax.version>0.0.1-SNAPSHOT</datax.version>
       <PermGen>64m</PermGen>
@@ -71,6 +72,22 @@
           <groupId>org.apache.commons</groupId>
           <artifactId>commons-pool2</artifactId>
           <version>2.4.1</version>
+      </dependency>
+      <dependency>
+          <groupId>${akka.group}</groupId>
+          <artifactId>akka-http_${scala.binary.version}</artifactId>
+          <version>${akka.http.version}</version>
+      </dependency>
+      <dependency>
+          <groupId>${akka.group}</groupId>
+          <artifactId>akka-http-spray-json_${scala.binary.version}</artifactId>
+          <version>${akka.http.version}</version>
+      </dependency>
+      <dependency>
+          <groupId>${akka.group}</groupId>
+          <artifactId>akka-http-testkit_${scala.binary.version}</artifactId>
+          <version>${akka.http.version}</version>
+          <scope>test</scope>
       </dependency>
       <dependency>
           <groupId>org.slf4j</groupId>
