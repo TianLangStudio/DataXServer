@@ -7,12 +7,16 @@
    
 **Feature**
 ---------------
-1. Thrift Server 
-2. DataX on Yarn
-3. Http Server （待开发）
+- 1. Thrift Server 
+- 2. DataX on Yarn
+- 3. Http Server （开发中）
 
+## TODO
+- 1.Http Server(开发中)    
+- 2.代码重构 (待开发)    
+> 按照功能类型拆分到多个子项目中　重新组织包名　方便后续新增功能
 
-## Deploy ##
+## Deploy
    下载发布包[DataXServer-0.0.1.tar.gz](http://pan.baidu.com/s/1hrHcbqs) 并解压 进入 0.0.1 目录     
    
    执行   ./bin/startThriftServer.sh  启动Thrift Server     
