@@ -11,6 +11,18 @@
 2. DataX on Yarn
 3. Http Server （待开发）
 
+
+## Deploy ##
+   下载发布包[DataXServer-0.0.1.tar.gz](http://pan.baidu.com/s/1hrHcbqs) 并解压 进入 0.0.1 目录     
+   
+   执行   ./bin/startThriftServer.sh  启动Thrift Server     
+   
+   进入 example/nodejs 目录      
+   
+   执行 node submitStream2Stream.js  提交测试任务到Thrift Server     
+   
+   
+   
 **Develop**
 ---------------  
   项目依赖阿里 DataX  
