@@ -1,15 +1,14 @@
 package com.tianlangstudio.data.datax.server
 
-import java.lang.String
-
-import _root_.akka.http.scaladsl.Http
-import _root_.akka.http.scaladsl.model.StatusCode
+import _root_.akka.actor.{ActorRef, ActorSystem}
 import _root_.akka.http.scaladsl.server.Directives._
-import _root_.akka.actor.ActorRef
-import _root_.akka.actor.ActorSystem
 import _root_.akka.stream.ActorMaterializer
-import com.tianlangstudio.data.datax.server.akka.AkkaJobHandler
+import com.tianlangstudio.data.datax.ext.thrift.TaskResult
+import com.tianlangstudio.data.datax.server.handler.AkkaJobHandler
 import com.tianlangstudio.data.datax.{Constants, DataxConf}
+import spray.json.{DefaultJsonProtocol, JsBoolean, JsObject, JsString, JsValue, RootJsonFormat, RootJsonWriter}
+import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
+import spray.json.DefaultJsonProtocol._
 
 /**
   *
@@ -24,14 +23,32 @@ class HttpServer(jobSchedulerActor: ActorRef, dataxConf: DataxConf, implicit val
   val host = dataxConf.getString(Constants.HTTP_SERVER_HOST, "127.0.0.1")
   val port = dataxConf.getString(Constants.HTTP_SERVER_HOST, "9808")
   val root = dataxConf.getString(Constants.HTTP_SERVER_ROOT, "")
-
+  implicit import JsonProtocol._
   val route = {
     path(s"$root/job") {
       get {
-        pathPrefix(LongNumber) { jobId =>
-          complete(s"$jobId")
+        pathPrefix(Segment) { jobId =>
+          val taskResult = jobHandler.getJobResult(jobId)
+          complete(taskResult)
+        }
+      } ~
+      get {
+        pathPrefix("status" / Segment) { jobId =>
+          val taskStatus = jobHandler.getJobStatus(jobId)
+          complete(taskStatus)
         }
       }
+    }
+  }
+}
+
+object JsonProtocol extends DefaultJsonProtocol {
+  implicit object TaskResultJsonFormat extends RootJsonWriter[TaskResult] {
+    override def write(taskResult: TaskResult): JsValue = {
+      JsObject(
+        "success" -> JsBoolean(taskResult.success),
+        "msg" -> JsString(taskResult.msg)
+      )
     }
   }
 }

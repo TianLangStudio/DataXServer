@@ -15,7 +15,7 @@ import org.apache.commons.codec.digest.DigestUtils
 import scala.concurrent.Await
 import scala.concurrent.duration._
 import com.tianlangstudio.data.datax.JobInfo._
-import com.tianlangstudio.data.datax.server.akka.AkkaJobHandler
+import com.tianlangstudio.data.datax.server.handler.AkkaJobHandler
 /**
  * Created by zhuhq on 2016/4/27.
  */
