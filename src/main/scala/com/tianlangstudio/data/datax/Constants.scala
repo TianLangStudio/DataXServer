@@ -26,9 +26,15 @@ object Constants {
   val DATAX_EXECUTOR_CORES="datax.executor.cores"
   val DATAX_EXECUTOR_APPLY_LOCAL_FIRST="datax.executor.apply.local.first"
   val DATAX_HOME = "datax.home"
-  val THRIFT_SERVER_HOST="server.ip"
-  val THRIFT_SERVER_PORT="server.port"
-  val THRIFT_SERVER_CONCURRENCE="server.concurrence"
+  val THRIFT_SERVER_HOST="thrift.server.ip"
+  val THRIFT_SERVER_PORT="thrift.server.port"
+  val THRIFT_SERVER_CONCURRENCE="thrift.server.concurrence"
+  val HTTP_SERVER_HOST="http.server.ip"
+  val HTTP_SERVER_PORT="http.server.port"
+  val HTTP_SERVER_CONCURRENCE="http.server.concurrence"
+  val HTTP_SERVER_ROOT="http.server.root"
+
+
   val JOB_STATUS_DONE="done"
   val JOB_STATUS_RUNNING="running"
   val PLACEHOLDER_EXECUTOR_ID = "VAR_EXECUTOR_ID"

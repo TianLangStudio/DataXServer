@@ -1,25 +1,21 @@
-package com.tianlangstudio.data.datax.ext.server;
+package com.tianlangstudio.data.datax.ext.server.handler;
 
-
-import java.util.Map;
 
 import com.tianlangstudio.data.datax.ext.multithread.Worker;
 import com.tianlangstudio.data.datax.ext.thrift.TaskCost;
 import com.tianlangstudio.data.datax.ext.thrift.TaskResult;
-import com.tianlangstudio.data.datax.ext.thrift.ThriftServer;
-import org.apache.thrift.TException;
 
-public class ThriftServerHandler implements ThriftServer.Iface {
+import java.util.Map;
+
+public class LocalServerHandler implements IJobHandler {
     private Worker worker;
-    private String server;
-    private int port;
     @Override
-    public String submitJob(String jobConfPath) throws TException {
+    public String submitJob(String jobConfPath){
         return worker.submitJob(jobConfPath);
     }
 
     @Override
-    public String submitJobWithParams(final String jobConfPath, final Map<String, String> params) throws TException {
+    public String submitJobWithParams(final String jobConfPath, final Map<String, String> params){
         return worker.submitJob(jobConfPath,params);
     }
 
@@ -37,10 +33,8 @@ public class ThriftServerHandler implements ThriftServer.Iface {
     }
 
 
-    public ThriftServerHandler(int concurrence,String server,int port) {
+    public LocalServerHandler(int concurrence) {
         worker = new Worker();
-        worker.init(concurrence,server,port);
-        this.server = server;
-        this.port = port;
+        worker.init(concurrence);
     }
 }

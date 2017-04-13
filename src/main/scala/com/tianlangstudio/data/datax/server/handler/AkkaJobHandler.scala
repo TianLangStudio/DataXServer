@@ -1,30 +1,27 @@
-package com.tianlangstudio.data.datax.thrift
+package com.tianlangstudio.data.datax.server.handler
 
 import java.util
-import java.util.UUID
 
-import akka.pattern.ask
 import akka.actor.ActorRef
 import akka.util.Timeout
-import com.tianlangstudio.data.datax.{Constants, JobInfo}
+import com.tianlangstudio.data.datax.JobInfo._
 import com.tianlangstudio.data.datax.ext.thrift.{TaskCost, TaskResult, ThriftServer}
 import com.tianlangstudio.data.datax.util.{ConfigUtil, Utils}
-import com.tianlangstudio.data.datax.{CancelJob, GetJobResult, GetJobStatus, SubmitJob}
-import org.apache.commons.codec.digest.DigestUtils
+import com.tianlangstudio.data.datax.{CancelJob, Constants, SubmitJob}
 
-import scala.concurrent.Await
 import scala.concurrent.duration._
-import com.tianlangstudio.data.datax.JobInfo._
+
 /**
  * Created by zhuhq on 2016/4/27.
  */
-class AkkaThriftServerHandler(jobSchedulerActor:ActorRef) extends ThriftServer.Iface{
+class AkkaJobHandler(jobSchedulerActor:ActorRef){
   implicit val timeout = Timeout(30 seconds)
-  override def submitJob(jobConfPath: String): String = {
+
+  def submitJob(jobConfPath: String): String = {
     submitJobWithParams(jobConfPath,null)
   }
 
-  override def getJobStatus(jobId: String): String = {
+  def getJobStatus(jobId: String): String = {
     if(jobId2ExecutorId.contains(jobId) || acceptedJobIds.contains(jobId) || rerunJobIds.contains(jobId)) {
       Constants.JOB_STATUS_RUNNING
     }else if(jobId2Result.contains(jobId)) {
@@ -34,11 +31,11 @@ class AkkaThriftServerHandler(jobSchedulerActor:ActorRef) extends ThriftServer.I
     }
   }
 
-  override def getJobCost(jobId: String): TaskCost = {
+  def getJobCost(jobId: String): TaskCost = {
     null
   }
 
-  override def submitJobWithParams(jobConfPath: String, params: util.Map[String, String]): String = {
+  def submitJobWithParams(jobConfPath: String, params: util.Map[String, String]): String = {
     //val jobId = UUID.randomUUID().toString
     val jobDesc = ConfigUtil.readJobDescIfInFileAndReplaceHolder(jobConfPath,params)
     //val jobId = DigestUtils.md5Hex(jobDesc);
@@ -47,12 +44,12 @@ class AkkaThriftServerHandler(jobSchedulerActor:ActorRef) extends ThriftServer.I
     jobId
   }
 
-  override def cancelJob(jobId: String): Boolean = {
+  def cancelJob(jobId: String): Boolean = {
     jobSchedulerActor ! CancelJob(jobId)
     true
   }
 
-  override def getJobResult(jobId: String): TaskResult = {
+  def getJobResult(jobId: String): TaskResult = {
     if(Constants.JOB_STATUS_DONE.equals(getJobStatus(jobId))) {
       jobId2Result.get(jobId) match {
         case Some(taskResult) =>

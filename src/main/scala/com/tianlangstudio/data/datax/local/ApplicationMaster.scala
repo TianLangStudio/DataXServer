@@ -5,7 +5,7 @@ import java.util.UUID
 import akka.actor.{Actor, ActorLogging, Props}
 import akka.actor.Actor.Receive
 import com.tianlangstudio.data.datax.main.ThriftServerMain
-import com.tianlangstudio.data.datax.thrift.AkkaThriftServerHandler
+import com.tianlangstudio.data.datax.thrift.AkkaThriftJobHandler
 import com.tianlangstudio.data.datax.yarn.ApplyExecutor
 import com.tianlangstudio.data.datax.{Constants, DataxConf}
 import com.tianlangstudio.data.datax.util.AkkaUtils
@@ -29,10 +29,10 @@ object ApplicationMaster extends App{
   val thriftPort = dataxConf.getInt(Constants.THRIFT_SERVER_PORT,9777)
   val thriftHost = dataxConf.getString(Constants.THRIFT_SERVER_HOST,"127.0.0.1")
   val thriftConcurrence = dataxConf.getInt(Constants.THRIFT_SERVER_CONCURRENCE,8)
-  val thriftServerHandler = new AkkaThriftServerHandler(jobSchedulerActor)
+  val thriftServerHandler = new AkkaThriftJobHandler(jobSchedulerActor)
 
   logging.info(s"start thrift server on  $thriftHost:$thriftPort")
-  ThriftServerMain.start(thriftConcurrence,thriftHost,thriftPort,thriftServerHandler)
+  ThriftServerMain.start(thriftHost,thriftPort,thriftServerHandler)
 
 }
 class ApplicationMaster(dataxConf: DataxConf) extends Actor with ActorLogging{
