@@ -4,7 +4,7 @@ import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 
 import com.tianlangstudio.data.datax.exception.DataXException;
-import com.tianlangstudio.data.datax.ext.server.ThriftServerHandler;
+import com.tianlangstudio.data.datax.ext.server.handler.ThriftServerHandler;
 import com.tianlangstudio.data.datax.ext.thrift.ThriftServer;
 import org.apache.thrift.TProcessor;
 import org.apache.thrift.protocol.TBinaryProtocol;
@@ -22,10 +22,10 @@ public class ThriftServerMain {
     private static final Logger logger = LoggerFactory.getLogger(ThriftServerMain.class);
     private static TServer server;
 
-    public static void start(int concurrence,String server,int port){
-        start(concurrence,server,port,new ThriftServerHandler(concurrence,server, port));
+    public static void start(int concurrence, String server,int port){
+        start(server,port,new ThriftServerHandler(concurrence));
     }
-    public static void start(int concurrence,String host,int port,ThriftServer.Iface handler) {
+    public static void start(String host,int port,ThriftServer.Iface handler) {
         if(server != null && server.isServing()) {
             return;
         }

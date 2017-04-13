@@ -147,7 +147,7 @@ object ApplicationMaster extends App {
 
   logger.info(s"start thrift server on  $thriftHost:$thriftPort")
   try{
-    ThriftServerMain.start(thriftConcurrence,thriftHost,thriftPort,thriftServerHandler)
+    ThriftServerMain.start(thriftHost,thriftPort,thriftServerHandler)
   }catch {
     case ex:Exception =>
       amrmClientAsync.unregisterApplicationMaster(FinalApplicationStatus.UNDEFINED,"","")

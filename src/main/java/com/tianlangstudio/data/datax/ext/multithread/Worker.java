@@ -47,8 +47,6 @@ public class Worker {
     public    int concurrence = 10;
     private   ExecutorService executor = Executors.newFixedThreadPool(10);
     private GenericObjectPool<Engine> enginePool;
-    private String server;
-    private int serverPort;
     private  final Monitor monitor = new Monitor();
     private Timer jobTimeMonitor;
     private Counter runningJobCounter;
@@ -56,14 +54,12 @@ public class Worker {
     private Map<String,Task> taskIdMap = new HashMap<String, Task>();
     private final static String MONITOR_PRE = "datax-server-worker-";
     DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss SSS");
-    public void init(int concurrence,String server,int serverPort) {
+    public void init(int concurrence) {
         this.concurrence = concurrence;
         executor = Executors.newFixedThreadPool(concurrence);
         enginePool = new GenericObjectPool(new EngineFactory());
-        this.server = server;
-        this.serverPort = serverPort;
-        initMonitor();
 
+        initMonitor();
     }
     private void initMonitor() {
         monitor.start();
@@ -138,19 +134,13 @@ public class Worker {
         taskCost.setBeginTime(dateFormat.format(beginTime));
         if(task.isDone()) {
             Date endTime = task.getEndTime();
-            taskCost.setEntTime(dateFormat.format(endTime));
+            taskCost.setEndTime(dateFormat.format(endTime));
             String cost = (endTime.getTime() - beginTime.getTime())/1000 + "s";
             taskCost.setCost(cost);
         }
         return  taskCost;
     }
-    public String getServer() {
-        return server;
-    }
 
-    public int getServerPort() {
-        return serverPort;
-    }
     public Timer getJobTimeMonitor() {
         return  jobTimeMonitor;
     }

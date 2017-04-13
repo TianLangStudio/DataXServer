@@ -32,7 +32,7 @@ object ApplicationMaster extends App{
   val thriftServerHandler = new AkkaThriftJobHandler(jobSchedulerActor)
 
   logging.info(s"start thrift server on  $thriftHost:$thriftPort")
-  ThriftServerMain.start(thriftConcurrence,thriftHost,thriftPort,thriftServerHandler)
+  ThriftServerMain.start(thriftHost,thriftPort,thriftServerHandler)
 
 }
 class ApplicationMaster(dataxConf: DataxConf) extends Actor with ActorLogging{
