@@ -38,4 +38,7 @@
   cd DataXServer  
   mvn compile  
 
-  
+## 问题交流可加群
+QQ群：579896894
+----------------
+![KeepLearning QQ](https://raw.githubusercontent.com/TianLangStudio/DataXServer/master/images/tianlangstudio-keeplearning-qrcode.jpg)  
