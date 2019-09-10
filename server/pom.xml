@@ -1,104 +1,62 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
+  <parent>
+      <groupId>com.tianlangstudio.data</groupId>
+      <artifactId>data-hamal</artifactId>
+      <version>2.0-SNAPSHOT</version>
+      <relativePath>../pom.xml</relativePath>
+  </parent>
   <groupId>com.tianlangstudio.data</groupId>
-  <artifactId>data-hamal</artifactId>
-  <version>2.0-SNAPSHOT</version>
-  <packaging>pom</packaging>
-  <name>Data Hamal</name>
+  <artifactId>hamal-server</artifactId>
+  <packaging>jar</packaging>
+  <name>Data Hamal Server</name>
   <url>https://github.com/TianLangStudio/DataXServer</url>
   <inceptionYear>2001</inceptionYear>
+
   <distributionManagement>
     <site>
-      <id>TianlangStudio</id>
-      <url>https://github.com/TianLangStudio/DataXServer</url>
+      <id>website</id>
+      <url>scp://webhost.company.com/www/website</url>
     </site>
   </distributionManagement>
-    <modules>
-        <module>common</module>
-        <module>core</module>
-        <module>server</module>
-        <module>httpserver</module>
-    </modules>
+
   <properties>
-      <argLine>-Dfile.encoding=UTF-8</argLine>
-      <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-      <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-      <metrics.version>3.1.2</metrics.version>
-      <akka.group>com.typesafe.akka</akka.group>
-      <akka.version>2.4.17</akka.version>
-      <akka.http.version>10.0.5</akka.http.version>
-      <java.version>1.8</java.version>
-      <datax.version>0.0.1-SNAPSHOT</datax.version>
-      <PermGen>64m</PermGen>
-      <MaxPermGen>512m</MaxPermGen>
-      <CodeCacheSize>512m</CodeCacheSize>
-      <scala.version>2.11.8</scala.version>
-      <scala.binary.version>2.11</scala.binary.version>
-      <slf4j-api-version>1.7.10</slf4j-api-version>
-      <logback-classic-version>1.0.13</logback-classic-version>
-      <thrift.version>0.10.0</thrift.version>
-      <commons-lang-version>2.6</commons-lang-version>
-      <commons-pool2-version>2.4.1</commons-pool2-version>
-      <commons-dbcp-version>1.4</commons-dbcp-version>
-      <hadoop.version>2.6.1</hadoop.version>
-      <dom4j.version>2.0.0-RC1</dom4j.version>
-      <junit.version>4.12</junit.version>
-      <scalatest.version>3.0.1</scalatest.version>
-      <typesafe-config-version>1.2.1</typesafe-config-version>
-      <data-hamal-version>2.0-SNAPSHOT</data-hamal-version>
-      <spark-boot-version>2.1.7.RELEASE</spark-boot-version>
   </properties>
-<dependencyManagement>
   <dependencies>
-      <dependency>
-          <groupId>org.springframework.boot</groupId>
-          <artifactId>spring-boot-starter-parent</artifactId>
-          <version>${spark-boot-version}</version>
-          <type>pom</type>
-          <scope>import</scope>
-      </dependency>
       <dependency>
           <groupId>org.scala-lang</groupId>
           <artifactId>scala-library</artifactId>
-          <version>${scala.version}</version>
           <scope>provided</scope>
       </dependency>
       <dependency>
           <groupId>org.scala-lang</groupId>
           <artifactId>scala-compiler</artifactId>
-          <version>${scala.version}</version>
           <scope>provided</scope>
       </dependency>
       <dependency>
           <groupId>org.apache.thrift</groupId>
           <artifactId>libthrift</artifactId>
-          <version>${thrift.version}</version>
       </dependency>
       <dependency>
           <groupId>com.alibaba.datax</groupId>
           <artifactId>datax-common</artifactId>
-          <version>${datax.version}</version>
       </dependency>
       <dependency>
           <groupId>com.alibaba.datax</groupId>
           <artifactId>datax-core</artifactId>
-          <version>${datax.version}</version>
       </dependency>
       <dependency>
           <groupId>com.alibaba.datax</groupId>
           <artifactId>datax-transformer</artifactId>
-          <version>${datax.version}</version>
       </dependency>
       <dependency>
           <groupId>org.apache.commons</groupId>
           <artifactId>commons-pool2</artifactId>
-          <version>${commons-pool2-version}</version>
       </dependency>
       <dependency>
           <groupId>${akka.group}</groupId>
           <artifactId>akka-http_${scala.binary.version}</artifactId>
-          <version>${akka.http.version}</version>
       </dependency>
       <dependency>
           <groupId>${akka.group}</groupId>
@@ -108,13 +66,11 @@
       <dependency>
           <groupId>${akka.group}</groupId>
           <artifactId>akka-http-testkit_${scala.binary.version}</artifactId>
-          <version>${akka.http.version}</version>
           <scope>test</scope>
       </dependency>
       <dependency>
           <groupId>org.slf4j</groupId>
           <artifactId>slf4j-api</artifactId>
-          <version>${slf4j-api-version}</version>
       </dependency>
       <dependency>
           <groupId>ch.qos.logback</groupId>
@@ -140,28 +96,26 @@
       <dependency>
           <groupId>org.apache.directory.studio</groupId>
           <artifactId>org.apache.commons.lang</artifactId>
-          <version>${commons-lang-version}</version>
+
       </dependency>
       <dependency>
           <groupId>commons-dbcp</groupId>
           <artifactId>commons-dbcp</artifactId>
-          <version>${commons-dbcp-version}</version>
+
       </dependency>
       <dependency>
           <groupId>org.apache.hadoop</groupId>
           <artifactId>hadoop-yarn-client</artifactId>
-          <version>${hadoop.version}</version>
+
       </dependency>
       <dependency>
           <groupId>org.apache.hadoop</groupId>
           <artifactId>hadoop-yarn-server-tests</artifactId>
-          <version>${hadoop.version}</version>
           <classifier>tests</classifier>
       </dependency>
       <dependency>
           <groupId>org.apache.hadoop</groupId>
           <artifactId>hadoop-common</artifactId>
-          <version>${hadoop.version}</version>
           <scope>provided</scope>
           <exclusions>
               <exclusion>
@@ -173,23 +127,20 @@
       <dependency>
           <groupId>org.apache.hadoop</groupId>
           <artifactId>hadoop-yarn-server-tests</artifactId>
-          <version>${hadoop.version}</version>
       </dependency>
       <dependency>
           <groupId>org.dom4j</groupId>
           <artifactId>dom4j</artifactId>
-          <version>${dom4j.version}</version>
+
       </dependency>
       <dependency>
           <groupId>junit</groupId>
           <artifactId>junit</artifactId>
-          <version>${junit.version}</version>
           <scope>test</scope>
       </dependency>
       <dependency>
           <groupId>org.scalatest</groupId>
-          <artifactId>scalatest_${scala.binary.version}</artifactId>
-          <version>${scalatest.version}</version>
+          <artifactId>scalatest_2.11</artifactId>
       </dependency>
       <dependency>
           <groupId>io.dropwizard.metrics</groupId>
@@ -209,7 +160,7 @@
       <dependency>
           <groupId>com.typesafe</groupId>
           <artifactId>config</artifactId>
-          <version>${typesafe-config-version}</version>
+          <version>1.2.1</version>
       </dependency>
       <dependency>
           <groupId>${akka.group}</groupId>
@@ -227,13 +178,13 @@
           <version>${akka.version}</version>
           <scope>test</scope>
       </dependency>
+
       <!--dependency>
           <groupId>org.mapdb</groupId>
           <artifactId>mapdb</artifactId>
           <version>2.0-beta2</version>
       </dependency-->
   </dependencies>
-</dependencyManagement>
   <build>
       <resources>
           <resource>
