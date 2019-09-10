@@ -1,4 +1,5 @@
 .idea/
-datax-server.iml
+*.iml
+*_bak
 target/
 datax.home*
