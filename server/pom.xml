@@ -2,28 +2,28 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-      <groupId>com.tianlangstudio.data</groupId>
+      <groupId>org.tianlangstudio.data.hamal</groupId>
       <artifactId>data-hamal</artifactId>
-      <version>2.0-SNAPSHOT</version>
+      <version>2.0.0-SNAPSHOT</version>
       <relativePath>../pom.xml</relativePath>
   </parent>
-  <groupId>com.tianlangstudio.data</groupId>
+  <groupId>org.tianlangstudio.data.hamal</groupId>
   <artifactId>hamal-server</artifactId>
   <packaging>jar</packaging>
   <name>Data Hamal Server</name>
   <url>https://github.com/TianLangStudio/DataXServer</url>
-  <inceptionYear>2001</inceptionYear>
-
-  <distributionManagement>
-    <site>
-      <id>website</id>
-      <url>scp://webhost.company.com/www/website</url>
-    </site>
-  </distributionManagement>
-
-  <properties>
-  </properties>
+  <inceptionYear>2019</inceptionYear>
   <dependencies>
+     <dependency>
+          <groupId>org.tianlangstudio.data.hamal</groupId>
+          <artifactId>hamal-common</artifactId>
+          <version>${data-hamal-version}</version>
+      </dependency>
+      <dependency>
+          <groupId>org.tianlangstudio.data.hamal</groupId>
+          <artifactId>hamal-core</artifactId>
+          <version>${data-hamal-version}</version>
+      </dependency>
       <dependency>
           <groupId>org.scala-lang</groupId>
           <artifactId>scala-library</artifactId>
@@ -40,14 +40,6 @@
       </dependency>
       <dependency>
           <groupId>com.alibaba.datax</groupId>
-          <artifactId>datax-common</artifactId>
-      </dependency>
-      <dependency>
-          <groupId>com.alibaba.datax</groupId>
-          <artifactId>datax-core</artifactId>
-      </dependency>
-      <dependency>
-          <groupId>com.alibaba.datax</groupId>
           <artifactId>datax-transformer</artifactId>
       </dependency>
       <dependency>
@@ -58,16 +50,16 @@
           <groupId>${akka.group}</groupId>
           <artifactId>akka-http_${scala.binary.version}</artifactId>
       </dependency>
-      <dependency>
+<!--      <dependency>
           <groupId>${akka.group}</groupId>
           <artifactId>akka-http-spray-json_${scala.binary.version}</artifactId>
           <version>${akka.http.version}</version>
-      </dependency>
-      <dependency>
+      </dependency>-->
+    <!--  <dependency>
           <groupId>${akka.group}</groupId>
           <artifactId>akka-http-testkit_${scala.binary.version}</artifactId>
           <scope>test</scope>
-      </dependency>
+      </dependency>-->
       <dependency>
           <groupId>org.slf4j</groupId>
           <artifactId>slf4j-api</artifactId>
@@ -138,30 +130,11 @@
           <artifactId>junit</artifactId>
           <scope>test</scope>
       </dependency>
-      <dependency>
+      <!--<dependency>
           <groupId>org.scalatest</groupId>
           <artifactId>scalatest_2.11</artifactId>
-      </dependency>
-      <dependency>
-          <groupId>io.dropwizard.metrics</groupId>
-          <artifactId>metrics-core</artifactId>
-          <version>${metrics.version}</version>
-      </dependency>
-      <dependency>
-          <groupId>io.dropwizard.metrics</groupId>
-          <artifactId>metrics-ganglia</artifactId>
-          <version>${metrics.version}</version>
-      </dependency>
-      <dependency>
-          <groupId>io.dropwizard.metrics</groupId>
-          <artifactId>metrics-jvm</artifactId>
-          <version>${metrics.version}</version>
-      </dependency>
-      <dependency>
-          <groupId>com.typesafe</groupId>
-          <artifactId>config</artifactId>
-          <version>1.2.1</version>
-      </dependency>
+      </dependency>-->
+
       <dependency>
           <groupId>${akka.group}</groupId>
           <artifactId>akka-remote_${scala.binary.version}</artifactId>

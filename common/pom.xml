@@ -2,46 +2,41 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-      <groupId>com.tianlangstudio.data</groupId>
+      <groupId>org.tianlangstudio.data.hamal</groupId>
       <artifactId>data-hamal</artifactId>
-      <version>2.0-SNAPSHOT</version>
+      <version>2.0.0-SNAPSHOT</version>
       <relativePath>../pom.xml</relativePath>
   </parent>
-  <groupId>com.tianlangstudio.data</groupId>
+  <groupId>org.tianlangstudio.data.hamal</groupId>
   <artifactId>hamal-common</artifactId>
   <name>Data Hamal Commom</name>
   <url>https://github.com/TianLangStudio/DataXServer</url>
-  <inceptionYear>2001</inceptionYear>
-
-  <distributionManagement>
-    <site>
-      <id>website</id>
-      <url>scp://webhost.company.com/www/website</url>
-    </site>
-  </distributionManagement>
-
-  <properties>
-      <argLine>-Dfile.encoding=UTF-8</argLine>
-      <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-      <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-      <metrics.version>3.1.2</metrics.version>
-      <akka.group>com.typesafe.akka</akka.group>
-      <akka.version>2.4.17</akka.version>
-      <akka.http.version>10.0.5</akka.http.version>
-      <java.version>1.8</java.version>
-      <datax.version>0.0.1-SNAPSHOT</datax.version>
-      <PermGen>64m</PermGen>
-      <MaxPermGen>512m</MaxPermGen>
-      <CodeCacheSize>512m</CodeCacheSize>
-      <scala.version>2.11.8</scala.version>
-      <scala.binary.version>2.11</scala.binary.version>
-      <slf4j-api-version>1.7.10</slf4j-api-version>
-      <logback-classic-version>1.0.13</logback-classic-version>
-  </properties>
-  <dependencies>
-  </dependencies>
+  <inceptionYear>2019</inceptionYear>
+    <dependencies>
+        <dependency>
+            <groupId>io.dropwizard.metrics</groupId>
+            <artifactId>metrics-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.dropwizard.metrics</groupId>
+            <artifactId>metrics-ganglia</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.dropwizard.metrics</groupId>
+            <artifactId>metrics-jvm</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.typesafe</groupId>
+            <artifactId>config</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.9</version>
+        </dependency>
+    </dependencies>
   <build>
-      <resources>
+      <!--<resources>
           <resource>
               <directory>src/main/resources</directory>
           </resource>
@@ -53,7 +48,7 @@
       </testResources>
       <outputDirectory>target/scala-${scala.binary.version}/classes</outputDirectory>
       <testOutputDirectory>target/scala-${scala.binary.version}/test-classes</testOutputDirectory>
-<!--
+--><!--
       <resources>
           <resource>
               <directory>src/main/resources</directory>
@@ -89,18 +84,6 @@
         <artifactId>build-helper-maven-plugin</artifactId>
             <version>1.9.1</version>
         <executions>
-        <!--execution>
-            <id>add-default-sources</id>
-            <phase>generate-sources</phase>
-            <goals>
-                <goal>add-source</goal>
-            </goals>
-            <configuration>
-                <sources>
-                    <source>v${hive.version.short}/src/main/scala</source>
-                </sources>
-            </configuration>
-        </execution-->
         <execution>
         <id>add-source</id>
             <phase>generate-sources</phase>
@@ -214,9 +197,9 @@
                 </compilerArgs>
             </configuration>
         </plugin>
-        <plugin>
-            <!-- NOTE: We don't need a groupId specification because the group is
-                org.apache.maven.plugins ...which is assumed by default. -->
+        <!--<plugin>
+            &lt;!&ndash; NOTE: We don't need a groupId specification because the group is
+                org.apache.maven.plugins ...which is assumed by default. &ndash;&gt;
             <artifactId>maven-assembly-plugin</artifactId>
             <version>2.4</version>
             <configuration>
@@ -229,14 +212,14 @@
             </configuration>
             <executions>
                 <execution>
-                    <id>make-assembly</id> <!-- this is used for inheritance merges -->
-                    <phase>package</phase> <!-- bind to the packaging phase -->
+                    <id>make-assembly</id> &lt;!&ndash; this is used for inheritance merges &ndash;&gt;
+                    <phase>package</phase> &lt;!&ndash; bind to the packaging phase &ndash;&gt;
                     <goals>
                         <goal>single</goal>
                     </goals>
                 </execution>
             </executions>
-        </plugin>
+        </plugin>-->
         <!--<plugin>
             <groupId>org.scalatest</groupId>
             <artifactId>scalatest-maven-plugin</artifactId>
