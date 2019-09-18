@@ -2,10 +2,11 @@ package org.tianlangstudio.data.hamal
 
 import java.util.Date
 
-import akka.actor.{ActorLogging, Actor, ActorRef}
+import akka.actor.{Actor, ActorLogging, ActorRef}
 import akka.remote.transport.AssociationHandle.Disassociated
 import com.tianlangstudio.data.datax.ext.thrift.TaskResult
-import com.tianlangstudio.data.datax.yarn.{ApplyExecutorYarn, ApplyExecutorLocal, ReturnExecutor, ApplyExecutor}
+import com.tianlangstudio.data.datax.yarn.{ApplyExecutor, ApplyExecutorLocal, ApplyExecutorYarn, ReturnExecutor}
+import org.tianlangstuido.data.hamal.core.{Constants, HamalConf}
 
 import scala.collection.mutable
 import scala.concurrent.duration._
@@ -20,7 +21,7 @@ import scala.concurrent.duration._
   * 记录executor任务状态
   *
   */
-class JobScheduler(dataxConf:DataxConf,amActor:ActorRef) extends Actor with ActorLogging{
+class JobScheduler(dataxConf:HamalConf, amActor:ActorRef) extends Actor with ActorLogging{
   private val executorId2Executor = new mutable.HashMap[String,ActorRef]()//executors
   private val executorLocalList = new mutable.TreeSet[String]()
   private val executorYarnList = new mutable.TreeSet[String]()

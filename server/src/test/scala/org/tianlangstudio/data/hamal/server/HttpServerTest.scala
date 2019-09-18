@@ -1,6 +1,5 @@
 package org.tianlangstudio.data.hamal.server
 
-import com.tianlangstudio.data.datax.main.HttpServerMain
 import org.scalatest.FunSuite
 import org.scalatest.Matchers._
 import org.tianlangstudio.data.hamal.common.Logging

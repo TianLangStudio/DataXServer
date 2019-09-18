@@ -1,11 +1,11 @@
-package org.tianlangstudio.data.hamal
+package org.tianlangstuido.data.hamal.core
 
 import com.typesafe.config.{Config, ConfigFactory}
 
 /**
  * Created by zhuhq on 2016/4/28.
  */
-class DataxConf(fileName:String = Constants.DATAX_MASTER_CONF_NAME) {
+class HamalConf(fileName:String = Constants.DATAX_MASTER_CONF_NAME) {
 
   val conf = ConfigFactory.load(fileName).withFallback(ConfigFactory.load())
   def withFallback(other:Config) = {

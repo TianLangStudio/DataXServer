@@ -7,6 +7,7 @@ import com.tianlangstudio.data.datax.core.Engine
 import com.tianlangstudio.data.datax.ext.thrift.TaskResult
 import com.tianlangstudio.data.datax.util.AkkaUtils
 import org.slf4j.LoggerFactory
+import org.tianlangstuido.data.hamal.core.{Constants, HamalConf}
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
@@ -16,7 +17,7 @@ import scala.concurrent.duration._
  */
 object Executor extends App{
   private val logging = LoggerFactory.getLogger(classOf[Executor])
-  val dataxConf = new DataxConf(Constants.DATAX_EXECUTOR_CONF_NAME)
+  val dataxConf = new HamalConf(Constants.DATAX_EXECUTOR_CONF_NAME)
   implicit val (system,port) = AkkaUtils.createActorSystem(
      Constants.AKKA_JOB_SCHEDULER_SYSTEM,
      "127.0.0.1",

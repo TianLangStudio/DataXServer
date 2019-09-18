@@ -1,0 +1,88 @@
+package org.tianlangstudio.data.hamal.server.http
+
+import akka.actor.ActorSystem
+import akka.http.scaladsl.Http
+import akka.http.scaladsl.model.Uri.Path.Segment
+import akka.http.scaladsl.server.Route
+import akka.http.scaladsl.server.Directives._
+import akka.stream.ActorMaterializer
+import org.tianlangstudio.data.hamal.common.Logging
+import org.tianlangstudio.data.hamal.core.handler.ITaskHandler
+import org.tianlangstuido.data.hamal.common.{TaskCost, TaskResult}
+import org.tianlangstuido.data.hamal.core.{Constants, HamalConf}
+import spray.json.{JsBoolean, JsObject, JsString, JsValue, RootJsonWriter}
+
+/**
+  *
+  * Created by zhuhq on 17-4-6.
+  */
+class HttpServer(taskHandler: ITaskHandler, hamalConf: HamalConf)(implicit val actorSystem: ActorSystem) extends Logging {
+
+  implicit val executionContext = actorSystem.dispatcher
+  implicit val mat = ActorMaterializer()
+  implicit object TaskResultJsonFormat extends RootJsonWriter[TaskResult] {
+    override def write(taskResult: TaskResult): JsValue = {
+      JsObject(
+        "success" -> JsBoolean(taskResult.isSuccess),
+        "msg" -> JsString(taskResult.getMsg)
+      )
+    }
+  }
+  implicit object TaskCostJsonFormat extends RootJsonWriter[TaskCost] {
+    override def write(taskCost: TaskCost): JsValue = {
+      JsObject(
+        "beginTime" -> JsString(taskCost.getBeginTime),
+        "endTime" -> JsString(taskCost.getEndTime),
+        "cost" -> JsString(taskCost.getCost)
+      )
+    }
+  }
+
+  val host = hamalConf.getString(Constants.HTTP_SERVER_HOST, "127.0.0.1")
+  val port = hamalConf.getInt(Constants.HTTP_SERVER_PORT, 9808)
+
+  val pathRoot = hamalConf.getString(Constants.HTTP_SERVER_ROOT, "dataxserver")
+
+  val route: Route =
+
+    pathPrefix(s"$pathRoot" / "task") {
+      concat(
+          get {
+            pathPrefix(Segment) { taskId =>
+              val taskResult = taskHandler.getTaskResult(taskId)
+              complete(taskResult)
+            }
+          },
+          get {
+            path("status" / Segment) { taskId =>
+              val taskStatus = taskHandler.getTaskStatus(taskId)
+              complete(taskStatus)
+            }
+          },
+          get {
+            path("cost" / Segment) { taskId =>
+              val taskCost = taskHandler.getTaskCost(taskId)
+              complete(taskCost)
+            }
+          },
+          post {
+            entity(as[String]) { taskDesc =>
+              parameterMap {parameterMap =>
+                complete(taskHandler.submitTaskWithParams(taskDesc, parameterMap))
+              }
+            }
+          }
+      )
+    }
+
+  logger.info(s"http server host:$host,port:$port, rootPath:$pathRoot")
+  val bindingFuture = Http().bindAndHandle(route, host, port)
+  logger.info(s"http server is running on $host:$port/$pathRoot")
+
+  def stop(): Unit = {
+    bindingFuture.flatMap(_.unbind()).onComplete(_ => actorSystem.terminate())
+  }
+
+
+
+}
