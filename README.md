@@ -1,9 +1,7 @@
 *DataX Server*
 ================  
 
-   生产环境用的基于阿里早期开源的DataX1.0.0        
-   当前版本基于新开源的DataX 3.0.0 重构 还未用在生产环境   
-   为 [DataX](https://github.com/alibaba/DataX) 提供远程调用（Thrift Server， Http Server）分布式运行（DataX On YARN）功能
+为 [DataX](https://github.com/alibaba/DataX) 提供远程调用（Thrift Server， Http Server）分布式运行（DataX On YARN）功能
    
 **Feature**
 ---------------
