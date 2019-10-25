@@ -1,4 +1,3 @@
-## master重构中 暂不能运行
 *DataX Server*
 ================  
 
@@ -10,12 +9,16 @@
 ---------------
 - 1. Thrift Server 
 - 2. DataX on Yarn
-- 3. Http Server （开发中）
-
+- 3. Http Server 
+- 4. 单机多线程方式运行
+- 5. 单机多进程方式运行
+- 6. 分布式运行(On Yarn)
+- 7. 混合模式运行（Yarn+多进程模式运行）
 ## TODO
-- 1.Http Server(开发中)    
-- 2.代码重构 (待开发)    
-> 按照功能类型拆分到多个子项目中　重新组织包名　方便后续新增功能
+- ~~1.Http Server(已完成)~~   
+- ~~2.代码重构 (已完成)~~    
+- ~~3.按照功能类型拆分到多个子项目中　重新组织包名　方便后续新增功能~~
+- 4.完善文档示例
 
 ## Deploy
    下载发布包[DataXServer-0.0.1.tar.gz](http://pan.baidu.com/s/1hrHcbqs) 并解压 进入 0.0.1 目录     
@@ -31,14 +34,15 @@
 **Develop**
 ---------------  
   项目依赖阿里 DataX  
-  git https://github.com/alibaba/DataX.git 
+  git clone https://github.com/alibaba/DataX.git 
   cd DataX    
   mvn install
   
-  git https://github.com/TianLangStudio/DataXServer.git  
+  git clone https://github.com/TianLangStudio/DataXServer.git  
   cd DataXServer  
   mvn compile  
-
+## 完善文档
+TODO
 ## 问题交流可加群
 QQ群：579896894
 ----------------

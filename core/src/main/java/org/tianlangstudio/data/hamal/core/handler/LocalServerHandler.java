@@ -1,7 +1,7 @@
 package org.tianlangstudio.data.hamal.core.handler;
 
 
-import org.tianlangstudio.data.hamal.core.runon.multithread.Worker;
+import org.tianlangstudio.data.hamal.core.multithread.Worker;
 import org.tianlangstuido.data.hamal.common.TaskCost;
 import org.tianlangstuido.data.hamal.common.TaskResult;
 

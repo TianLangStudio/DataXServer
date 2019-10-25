@@ -37,8 +37,8 @@ object Constants extends Consts{
   val HTTP_SERVER_ROOT="http.server.root"
 
 
-  val JOB_STATUS_DONE="done"
-  val JOB_STATUS_RUNNING="running"
+  val TASK_STATUS_DONE="done"
+  val TASK_STATUS_RUNNING="running"
   val PLACEHOLDER_EXECUTOR_ID = "VAR_EXECUTOR_ID"
   val EXECUTOR_RUN_ON_TYPE_LOCAL = "local"
   val EXECUTOR_RUN_ON_TYPE_YARN = "yarn"

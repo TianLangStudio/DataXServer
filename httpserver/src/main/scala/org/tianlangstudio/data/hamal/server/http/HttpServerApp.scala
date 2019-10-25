@@ -15,6 +15,7 @@ object HttpServerApp extends App{
   } else  {
     3
   }
+  //使用LocalServerHandler多线程方式执行任务
   val httpServer = new HttpServer(new LocalServerHandler(concurrence), new HamalConf())
   sys.addShutdownHook {
     httpServer.stop()

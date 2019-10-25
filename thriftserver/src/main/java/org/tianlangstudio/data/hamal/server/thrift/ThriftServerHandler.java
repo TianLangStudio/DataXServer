@@ -36,11 +36,13 @@ public class ThriftServerHandler implements ThriftServer.Iface, ITaskHandler {
         return taskHandler.getTaskCost(taskId);
     }
 
+    @Override
     public ThriftTaskResult getThriftTaskResult(String taskId) {
         return ThriftServerUtil.taskResult2Thrift(
                 taskHandler.getTaskResult(taskId)
         );
     }
+    @Override
     public ThriftTaskCost getThriftTaskCost(String taskId) {
         return ThriftServerUtil.taskCost2Thrift(
                 taskHandler.getTaskCost(taskId)
