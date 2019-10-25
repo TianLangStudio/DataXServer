@@ -45,15 +45,8 @@ class HttpServer(taskHandler: ITaskHandler, hamalConf: HamalConf)(implicit val a
   val pathRoot = hamalConf.getString(Constants.HTTP_SERVER_ROOT, "dataxserver")
 
   val route: Route =
-
     pathPrefix(s"$pathRoot" / "task") {
       concat(
-          get {
-            pathPrefix(Segment) { taskId =>
-              val taskResult  = taskHandler.getTaskResult(taskId)
-              complete(taskResult)
-            }
-          },
           get {
             path("status" / Segment) { taskId =>
               val taskStatus = taskHandler.getTaskStatus(taskId)
@@ -69,11 +62,37 @@ class HttpServer(taskHandler: ITaskHandler, hamalConf: HamalConf)(implicit val a
           post {
             entity(as[String]) { taskDesc =>
               parameterMap {parameterMap =>
+                logger.info(s"taskDesc: $taskDesc")
                 complete(taskHandler.submitTaskWithParams(taskDesc, parameterMap.asJava))
               }
             }
+          },
+          get {
+            pathPrefix(Segment) { taskId =>
+              val taskResult  = taskHandler.getTaskResult(taskId)
+              if(taskResult == null) {
+                complete(new TaskResult(s"Not Found task[$taskId]"))
+              } else {
+                complete(taskResult)
+              }
+
+            }
           }
       )
+    } ~ path(s"$pathRoot") {
+      get {
+        complete(
+          s"""Usage: [get $pathRoot/task/#taskId -> TaskResult]
+             |curl ip:port/$pathRoot/task/#taskId
+             |[get $pathRoot/task/status/#taskId -> Task Status:
+             |${Constants.TASK_STATUS_DONE} or ${Constants.TASK_STATUS_RUNNING}]
+             |curl ip:port/$pathRoot/task/status/#taskId
+             |[get $pathRoot/task/cost/#taskId -> TaskCost]
+             |curl ip:port/$pathRoot/task/cost/#taskId
+             |[post $pathRoot/task TaskDesc -> taskId of submit task]
+             |curl  -XPOST -d '@job.json' ip:port/$pathRoot/task
+           """.stripMargin)
+      }
     }
 
   logger.info(s"http server host:$host,port:$port, rootPath:$pathRoot")

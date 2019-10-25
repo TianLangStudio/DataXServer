@@ -13,14 +13,11 @@
 	<packaging>jar</packaging>
 	<name>Hamal HTTP Server</name>
 	<description>Data Hamal HTTP Server</description>
-	<properties>
-		<java.version>1.8</java.version>
-	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>org.tianlangstudio.data.hamal</groupId>
 			<artifactId>hamal-core</artifactId>
-			<version>2.0.0-SNAPSHOT</version>
+			<version>${data-hamal-version}</version>
 		</dependency>
 		<dependency>
 			<groupId>${akka.group}</groupId>
@@ -29,7 +26,7 @@
 		<dependency>
 			<groupId>${akka.group}</groupId>
 			<artifactId>akka-http_${scala.binary.version}</artifactId>
-			<version>10.1.9</version>
+			<!--<version>10.1.9</version>-->
 		</dependency>
 		<dependency>
 			<groupId>${akka.group}</groupId>
@@ -39,6 +36,21 @@
 		<dependency>
 			<groupId>${akka.group}</groupId>
 			<artifactId>akka-http-spray-json_${scala.binary.version}</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j-api-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>${logback-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-core</artifactId>
+			<version>${logback-version}</version>
 		</dependency>
 	</dependencies>
 	<build>

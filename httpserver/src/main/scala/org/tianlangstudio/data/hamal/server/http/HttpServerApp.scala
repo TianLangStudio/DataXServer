@@ -1,15 +1,16 @@
 package org.tianlangstudio.data.hamal.server.http
 
 import akka.actor.ActorSystem
+import org.tianlangstudio.data.hamal.common.Logging
 import org.tianlangstudio.data.hamal.core.handler.LocalServerHandler
-import org.tianlangstuido.data.hamal.core.HamalConf
+import org.tianlangstuido.data.hamal.core.{Constants, HamalConf}
 
 /**
   *
   * Created by zhuhq on 17-4-13.
   */
-object HttpServerApp extends App{
-  implicit val system = ActorSystem("datax-http-server")
+object HttpServerApp extends App with Logging{
+  implicit val system = ActorSystem(Constants.NAME_HTTP_SERVER)
   val concurrence = if(args.length > 1) {
     args(0).toInt
   } else  {

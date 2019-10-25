@@ -78,7 +78,8 @@ public class Worker {
      * ***/
     public String submitTask(String taskDesc,Map<String,String> params) {
         logger.info("submit task begin");
-        if(taskDesc == null) {
+        if(!ConfigUtil.validTaskDesc(taskDesc)) {
+            logger.warn(MSG_JOBDES_IS_REQUIRED);
             throw new IllegalArgumentException(MSG_JOBDES_IS_REQUIRED);
         }
         String taskId = Task.genId(this);
@@ -104,14 +105,14 @@ public class Worker {
      * **/
     public String getTaskStatus(String taskId) {
         Task task = taskIdMap.get(taskId);
-        return task == null ? "" : task.getStatus();
+        return task == null ? "not found task:" + taskId : task.getStatus();
     }
     /**
      * 获取task结果
      * **/
      public TaskResult getTaskResult(String taskId) {
          Task task = taskIdMap.get(taskId);
-         return task == null ? null : task.getResult();
+         return task == null ? new TaskResult("not found task:" + taskId) : task.getResult();
      }
 
      public boolean cancelTask(String taskId) {

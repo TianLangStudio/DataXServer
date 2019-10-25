@@ -5,6 +5,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tianlangstudio.data.hamal.core.ConfigUtil;
 import org.tianlangstudio.data.hamal.core.Engine;
 import org.tianlangstuido.data.hamal.common.TaskResult;
 import org.tianlangstuido.data.hamal.common.exp.ExceptionUtil;
@@ -55,7 +56,8 @@ public class Task implements Callable<TaskResult> {
                 result = this.future.get();
 
             } catch (Exception e) {
-                result = new TaskResult(ExceptionUtil.trace(e));
+                logger.error("task error:", e);
+                result = new TaskResult(e);
             }
             this.future = null;//方便垃圾回收
         }
@@ -85,10 +87,10 @@ public class Task implements Callable<TaskResult> {
     public TaskResult call() {
         logger.info("task["+id+"] begin");
         TaskResult taskResult = new TaskResult();//默认为成功
-        if(StringUtils.isBlank(taskConfStr)) {
-
+        if(!ConfigUtil.validTaskDesc(taskConfStr)) {
             beginTime = new Date();
             endTime = beginTime;
+            logger.error("task:" + id + " taskConfStr is required and valid:" + taskConfStr);
             return new TaskResult(MSG_JOBDES_IS_REQUIRED);
         }
         Timer.Context context = worker.getTaskTimeMonitor().time();

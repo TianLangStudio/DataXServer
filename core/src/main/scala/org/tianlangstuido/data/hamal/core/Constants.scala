@@ -6,6 +6,7 @@ import org.tianlangstuido.data.hamal.common.Consts
  * Created by zhuhq on 2016/4/27.
  */
 object Constants extends Consts{
+  val NAME_HTTP_SERVER = "hamal-http-server";
   val AKKA_PROTOCOL = "akka.tcp";
   val AKKA_JOB_SCHEDULER_SYSTEM = "jobSchedulerSystem";
   val AKKA_JOB_SCHEDULER_ACTOR = "jobSchedulerActor";

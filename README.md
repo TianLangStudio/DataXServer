@@ -40,7 +40,7 @@
   
   git clone https://github.com/TianLangStudio/DataXServer.git  
   cd DataXServer  
-  mvn compile  
+  mvn compile install
 ## Document
 TODO
 ## 问题交流可加群

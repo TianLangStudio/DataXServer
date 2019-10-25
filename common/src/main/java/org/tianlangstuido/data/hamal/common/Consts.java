@@ -6,7 +6,7 @@ public interface Consts {
     String TASK_STATUS_RUNNING = "running";//running
 
     //message
-    String MSG_JOBDES_IS_REQUIRED = "job desc file is required";
+    String MSG_JOBDES_IS_REQUIRED = "job desc file is required and valid";
     String MSG_SUCCESS = "success";
 
     //monitor

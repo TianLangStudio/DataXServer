@@ -11,7 +11,10 @@ import org.apache.commons.lang.StringUtils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tianlangstuido.data.hamal.common.Consts;
 import org.tianlangstuido.data.hamal.common.exp.DataHamalException;
+import org.tianlangstuido.data.hamal.core.Constants;
+import scala.collection.immutable.Stream;
 
 /**
  * Created by zhuhq on 2015/12/14.
@@ -42,8 +45,8 @@ public class ConfigUtil {
     }
 
     public static String readTaskDescIfInFileAndReplaceHolder(String taskDesc,Map<String,String> holderValueMap) {
-        if(taskDesc == null) {
-            throw new IllegalArgumentException("task desc is required");
+        if(!validTaskDesc(taskDesc)) {
+            throw new IllegalArgumentException(Consts.MSG_JOBDES_IS_REQUIRED);
         }
         taskDesc = readTaskDescIfInFile(taskDesc);
         logger.info("replace config content placeholder begin");
@@ -52,8 +55,11 @@ public class ConfigUtil {
         return taskDesc;
     }
     public static String readTaskDescIfInFile(String taskDesc) {
-        String taskContent = "";
-        if(!taskDesc.contains("{")) {//taskDesc是一个文件路径
+        String taskContent = taskDesc;//如果是task配置内容直接返回
+        if(!validTaskDesc(taskDesc)) {
+            throw new DataHamalException(Consts.MSG_JOBDES_IS_REQUIRED);
+        }
+        if(!taskDesc.contains("{")) {//taskDesc是一个文件路径 读取文件内容
 
             try {
                 logger.info("reader task desc content from file begin");
@@ -67,5 +73,9 @@ public class ConfigUtil {
             }
         }
         return taskContent;
+    }
+
+    public static boolean validTaskDesc(String taskDesc) {
+        return StringUtils.isNotBlank(taskDesc) && taskDesc.length() > 3;
     }
 }
