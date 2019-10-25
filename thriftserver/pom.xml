@@ -9,6 +9,8 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>hamal-thrift-server</artifactId>
+    <name>Hamal Thrift Server</name>
+    <description>Data Hamal Thrift Server</description>
     <dependencies>
         <dependency>
             <groupId>org.tianlangstudio.data.hamal</groupId>

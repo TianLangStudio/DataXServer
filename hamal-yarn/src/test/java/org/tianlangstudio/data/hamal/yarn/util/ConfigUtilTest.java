@@ -6,7 +6,6 @@ import java.util.Map;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.tianlangstudio.data.datax.util.ConfigUtil;
 import org.tianlangstudio.data.hamal.core.ConfigUtil;
 
 /**

@@ -15,8 +15,8 @@
 - 6. 分布式运行(On Yarn)
 - 7. 混合模式运行（Yarn+多进程模式运行）
 ## TODO
-- ~~1.Http Server(已完成)~~   
-- ~~2.代码重构 (已完成)~~    
+- ~~1.Http Server~~   
+- ~~2.代码重构~~    
 - ~~3.按照功能类型拆分到多个子项目中　重新组织包名　方便后续新增功能~~
 - 4.完善文档示例
 
@@ -41,7 +41,7 @@
   git clone https://github.com/TianLangStudio/DataXServer.git  
   cd DataXServer  
   mvn compile  
-## 完善文档
+## Document
 TODO
 ## 问题交流可加群
 QQ群：579896894

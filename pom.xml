@@ -45,7 +45,7 @@
       <hadoop.version>2.6.1</hadoop.version>
       <dom4j.version>2.1.1</dom4j.version>
       <junit.version>4.12</junit.version>
-      <scalatest.version>3.0.1</scalatest.version>
+      <scalatest.version>3.2.0-M1</scalatest.version>
       <typesafe-config-version>1.2.1</typesafe-config-version>
       <data-hamal-version>2.0.0-SNAPSHOT</data-hamal-version>
       <spark-boot-version>2.1.7.RELEASE</spark-boot-version>
@@ -197,11 +197,11 @@
           <version>${junit.version}</version>
           <scope>test</scope>
       </dependency>
-   <!--   <dependency>
+      <dependency>
           <groupId>org.scalatest</groupId>
           <artifactId>scalatest_${scala.binary.version}</artifactId>
           <version>${scalatest.version}</version>
-      </dependency>-->
+      </dependency>
       <dependency>
           <groupId>io.dropwizard.metrics</groupId>
           <artifactId>metrics-core</artifactId>

@@ -4,10 +4,6 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.tianlangstudio.data.datax.ext.thrift.TaskCost;
-import com.tianlangstudio.data.datax.ext.thrift.TaskResult;
-import com.tianlangstudio.data.datax.ext.thrift.ThriftServer;
-import com.tianlangstudio.data.datax.main.ThriftServerMain;
 
 import com.typesafe.config.ConfigFactory;
 import org.apache.commons.io.FileUtils;
@@ -23,6 +19,11 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tianlangstudio.data.hamal.server.thrift.ThriftServer;
+import org.tianlangstudio.data.hamal.server.thrift.ThriftServerApp;
+import org.tianlangstudio.data.hamal.server.thrift.ThriftTaskCost;
+import org.tianlangstudio.data.hamal.server.thrift.ThriftTaskResult;
+import org.tianlangstuido.data.hamal.common.TaskResult;
 
 /**
  * Created by zhuhq on 2015/12/2.
@@ -41,7 +42,7 @@ public class ThriftServerTest {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                ThriftServerMain.start(4,"127.0.0.1",9777);
+                ThriftServerApp.start(4,"127.0.0.1",9777);
             }
         }).start();
         Thread.sleep(3000);
@@ -51,19 +52,19 @@ public class ThriftServerTest {
 
     @AfterClass
     public static void stopServer() {
-        ThriftServerMain.stop();
+        ThriftServerApp.stop();
     }
 
     @Test
-    public void testSubmitJob() throws Exception {
+    public void testSubmitTask() throws Exception {
 
 
         TTransport transport = new TSocket("127.0.0.1",9777);
         TProtocol protocol = new TBinaryProtocol(transport);
         ThriftServer.Client client = new ThriftServer.Client(protocol);
         transport.open();
-        String taskId1 = client.submitJob("/data1/code/github/DataX/target/datax/datax/stream2stream.json");
-        //String taskId2 = client.submitJob("/home/datax/datax/jobs/postgrereader_to_oraclewriter_zhuhq.xml");
+        String taskId1 = client.submitTask("/data1/code/github/DataX/target/datax/datax/stream2stream.json");
+        //String taskId2 = client.submitTask("/home/datax/datax/jobs/postgrereader_to_oraclewriter_zhuhq.xml");
         System.out.println(taskId1);
         //System.out.println(taskId2);
         transport.close();
@@ -71,7 +72,7 @@ public class ThriftServerTest {
     }
 
     @Test
-    public void testSubmitJobWithParams() throws Exception {
+    public void testSubmitTaskWithParams() throws Exception {
 
 
         TTransport transport = new TSocket("192.168.41.225",9777);
@@ -83,31 +84,31 @@ public class ThriftServerTest {
         System.out.println(jobDesc);
         Map<String,String> params = new HashMap<String, String>();
         params.put("mysql.table","dw_mbr_userinfo_20151114");
-        String taskId1 = client.submitJobWithParams(jobDesc,params);
+        String taskId1 = client.submitTaskWithParams(jobDesc,params);
         System.out.println(taskId1);
         transport.close();
     }
     @Test
-    public void testGetJobResult() throws Exception{
+    public void testGetTaskResult() throws Exception{
         TTransport transport = new TSocket("127.0.0.1",9777);
         TProtocol protocol = new TBinaryProtocol(transport);
         ThriftServer.Client client = new ThriftServer.Client(protocol);
         transport.open();
-        TaskResult taskResult1 = client.getJobResult("4956993821621");
-        //TaskResult taskResult2 = client.getJobResult("127.0.0.1:9777/2d2b61vxwdo");
+        ThriftTaskResult taskResult1 = client.getThriftTaskResult("4956993821621");
+        //TaskResult taskResult2 = client.getTaskResult("127.0.0.1:9777/2d2b61vxwdo");
         System.out.println(taskResult1==null?"":taskResult1.success + " " + taskResult1.msg);
         //System.out.println(taskResult2==null?"":taskResult2.getMsg());
         transport.close();
     }
 
     @Test
-    public void testGetJobCost() throws Exception{
+    public void testGetTaskCost() throws Exception{
         TTransport transport = new TSocket("192.168.41.225",9777);
         TProtocol protocol = new TBinaryProtocol(transport);
         ThriftServer.Client client = new ThriftServer.Client(protocol);
         transport.open();
-        TaskCost cost1 = client.getJobCost("127.0.0.1:9777/2d2h3e85x3q");
-        TaskCost cost2 = client.getJobCost("127.0.0.1:9777/2d2h3e9er3t");
+        ThriftTaskCost cost1 = client.getThriftTaskCost("127.0.0.1:9777/2d2h3e85x3q");
+        ThriftTaskCost cost2 = client.getThriftTaskCost("127.0.0.1:9777/2d2h3e9er3t");
         System.out.println(cost1);
         System.out.println(cost2);
         transport.close();
