@@ -26,9 +26,9 @@ public class Engine extends com.alibaba.datax.core.Engine {
             // 如果不是 standalone 模式，那么 jobId 一定不能为-1
             throw DataXException.asDataXException(FrameworkErrorCode.CONFIG_ERROR, "非 standalone 模式必须在 URL 中提供有效的 jobId.");
         }*/
-        System.out.println("jobid***********");
-        configuration.set(CoreConstant.DATAX_CORE_CONTAINER_JOB_ID, Long.parseLong(jobId));
-
+        logger.info("设置jobId:%s", jobId);
+        //jobId 必须是有效的整数
+        configuration.set(CoreConstant.DATAX_CORE_CONTAINER_JOB_ID, jobId);
         configuration.merge(
                 Configuration.from(new File(CoreConstant.DATAX_CONF_PATH)),
                 false);

@@ -60,7 +60,7 @@ public class Client {
                         javaHome + "/bin/java" +
                                 " -classpath " +  classpath +
                                 " -Xmx256M" +
-                                " com.tianlangstudio.data.datax.yarn.ApplicationMaster" +
+                                " com.tianlangstudio.data.hamal.yarn.ApplicationMaster" +
                                 " " + System.getProperty(YarnConfiguration.RM_SCHEDULER_ADDRESS) +
                                 " 1>" + ApplicationConstants.LOG_DIR_EXPANSION_VAR + "/stdout" +
                                 " 2>" + ApplicationConstants.LOG_DIR_EXPANSION_VAR + "/stderr"

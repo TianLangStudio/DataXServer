@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.tianlangstuido.data.hamal.common.Consts.*;
 
@@ -98,10 +99,6 @@ public class Task implements Callable<TaskResult> {
         try {
             counter.inc();
             engine = enginePool.borrowObject();
-            //根据taskConfPath中是否含有"<"判断 是文件路径还是配置文件字符串
-            //TaskConf taskConf = taskConfPath.contains("<")?ParseXMLUtil.xmlStr2TaskConf(taskConfPath):ParseXMLUtil.loadTaskConfig(taskConfPath);
-
-
             beginTime = new Date();
             engine.start(taskConfStr, id);
             endTime = new Date();
@@ -121,9 +118,12 @@ public class Task implements Callable<TaskResult> {
     public String getId() {
         return  id;
     }
+    private static AtomicInteger idIndex = new AtomicInteger(0);
 
     public static String genId(Worker worker) {
-        return System.nanoTime() + "";
+        return idIndex.getAndAdd(1) + "";
+        //datax job id 需要是一个整型类型的数字
+        //return System.nanoTime() + "";
         //return worker.getServer() +":"+ worker.getServerPort()+"/" + Long.toString(System.nanoTime(), 36);
     }
 

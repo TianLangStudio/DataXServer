@@ -21,24 +21,56 @@
 ## Deploy
    下载发布包[DataXServer-0.0.1.tar.gz](http://pan.baidu.com/s/1hrHcbqs) 并解压 进入 0.0.1 目录     
    
-   执行   ./bin/startThriftServer.sh  启动Thrift Server     
-   
-   进入 example/nodejs 目录      
-   
-   执行 node submitStream2Stream.js  提交测试任务到Thrift Server     
+   启动Thrift Server
+   ```shell
+   ./bin/startThriftServer.sh     
+   ```
+   使用NodeJS提交测试任务到Thrift Server  
+   ```shell
+   cd example/nodejs    
+   node submitStream2Stream.js 
+   ```
+     
    
    
    
 **Develop**
 ---------------  
-  项目依赖阿里 DataX  
+  ### 下载程序源码
+  __项目依赖阿里 DataX__
+  ```bash
   git clone https://github.com/alibaba/DataX.git 
   cd DataX    
   mvn install
   
   git clone https://github.com/TianLangStudio/DataXServer.git  
   cd DataXServer  
-  mvn compile install
+  mvn clean compile install -DskipTests
+  ```
+  ### run http server (已部署好datax 且能正常运行job/test_job.json)
+  - 配置datax安装目录
+  > 修改pom.xml中的datax-home配置项为部署datax的地址
+  ```xml
+   <datax-home>/data/test/datax</datax-home>
+  ```
+  - 启动http server
+  ```bash
+   cd httpserver
+   mvn scala:run -Dlauncher=httpserver -DskipTests
+  ```
+  - 提交任务 获取任务ID
+  ```bash
+  curl -XPOST -d "@测试文件路径" 127.0.0.1:9808/dataxserver/task
+```
+  > tianlang@tianlang:job$ curl  -XPOST -d "@job/test_job.json" 127.0.0.1:9808/dataxserver/task
+  > 0 （任务ID）
+  - 获取任务执行状态结果耗时
+  ```bash
+  curl  127.0.0.1:9808/dataxserver/task/status/0
+  curl  127.0.0.1:9808/dataxserver/task/0
+  curl  127.0.0.1:9808/dataxserver/task/cost/0
+```
+![运行成功日志](https://raw.githubusercontent.com/TianLangStudio/DataXServer/master/images/test_job_success.png) 
 ## Document
 TODO
 ## 问题交流可加群

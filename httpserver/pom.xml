@@ -54,7 +54,7 @@
 		</dependency>
 	</dependencies>
 	<build>
-		<!-- <resources>
+		 <resources>
              <resource>
                  <directory>src/main/resources</directory>
              </resource>
@@ -66,7 +66,7 @@
          </testResources>
          <outputDirectory>target/scala-${scala.binary.version}/classes</outputDirectory>
          <testOutputDirectory>target/scala-${scala.binary.version}/test-classes</testOutputDirectory>
-       --><plugins>
+       <plugins>
 		<plugin>
 			<groupId>org.apache.maven.plugins</groupId>
 			<artifactId>maven-surefire-plugin</artifactId>
@@ -80,7 +80,7 @@
 		<plugin>
 			<groupId>net.alchim31.maven</groupId>
 			<artifactId>scala-maven-plugin</artifactId>
-			<version>3.2.2</version>
+			<version>4.2.4</version>
 			<executions>
 				<execution>
 					<id>scala-compile-first</id>
@@ -101,11 +101,11 @@
 				<scalaVersion>${scala.version}</scalaVersion>
 				<recompileMode>incremental</recompileMode>
 				<useZincServer>true</useZincServer>
-				<args>
+				<!--<args>
 					<arg>-unchecked</arg>
 					<arg>-deprecation</arg>
 					<arg>-feature</arg>
-				</args>
+				</args>-->
 				<jvmArgs>
 					<jvmArg>-Xms1024m</jvmArg>
 					<jvmArg>-Xmx1024m</jvmArg>
@@ -121,6 +121,19 @@
 					<javacArg>${java.version}</javacArg>
 					<javacArg>-Xlint:all,-serial,-path</javacArg>
 				</javacArgs>
+				<launchers>
+					<launcher>
+						<id>httpserver</id>
+						<mainClass>org.tianlangstudio.data.hamal.server.http.HttpServerApp</mainClass>
+						<args>
+							<!--并发度 使用多少个线程运行任务-->
+							<arg>3</arg>
+						</args>
+						<jvmArgs>
+							<jvmArg>-Ddatax.home=${datax-home}</jvmArg>
+						</jvmArgs>
+					</launcher>
+				</launchers>
 			</configuration>
 		</plugin>
 		<plugin>
@@ -138,6 +151,28 @@
 				</compilerArgs>
 			</configuration>
 		</plugin>
+		<!--<plugin>
+			<groupId>net.alchim31.maven</groupId>
+			<artifactId>scala-maven-plugin</artifactId>
+			<version>4.2.4</version>
+			<configuration>
+				<launchers>
+					<launcher>
+						<id>httpserver</id>
+						<mainClass>org.tianlangstudio.data.hamal.server.http.HttpServerApp</mainClass>
+						<args>
+							&lt;!&ndash;并发度 使用多少个线程运行任务&ndash;&gt;
+							<arg>3</arg>
+						</args>
+						&lt;!&ndash; jvmArgs are optional &ndash;&gt;
+						<jvmArgs>
+							<jvmArg>-Ddatax.home=/data/test/datax.</jvmArg>
+						</jvmArgs>
+					</launcher>
+					&lt;!&ndash; you could define other launcher &ndash;&gt;
+				</launchers>
+			</configuration>
+		</plugin>-->
 	</plugins>
 	</build>
 

@@ -50,6 +50,7 @@
       <typesafe-config-version>1.2.1</typesafe-config-version>
       <data-hamal-version>2.0.0-SNAPSHOT</data-hamal-version>
       <spark-boot-version>2.1.7.RELEASE</spark-boot-version>
+      <datax-home>/data/test/datax</datax-home>
   </properties>
 <dependencyManagement>
   <dependencies>

@@ -13,8 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tianlangstuido.data.hamal.common.Consts;
 import org.tianlangstuido.data.hamal.common.exp.DataHamalException;
-import org.tianlangstuido.data.hamal.core.Constants;
-import scala.collection.immutable.Stream;
+
 
 /**
  * Created by zhuhq on 2015/12/14.
