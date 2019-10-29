@@ -4,8 +4,8 @@ import java.net.BindException
 import java.util.Calendar
 
 import org.apache.hadoop.yarn.api.records.{ApplicationAttemptId, ApplicationId, ContainerId, NodeId}
-import org.tianlangstuido.data.hamal.common.exp.DataHamalException
-import org.tianlangstuido.data.hamal.core.HamalConf
+import org.tianlangstudio.data.hamal.common.exp.DataHamalException
+import org.tianlangstudio.data.hamal.core.HamalConf
 
 private[hamal] object Utils {
   /**

@@ -1,14 +1,12 @@
 package org.tianlangstudio.data.hamal.core.multithread;
 import com.codahale.metrics.Counter;
 import com.codahale.metrics.Timer;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tianlangstudio.data.hamal.core.ConfigUtil;
 import org.tianlangstudio.data.hamal.core.Engine;
-import org.tianlangstuido.data.hamal.common.TaskResult;
-import org.tianlangstuido.data.hamal.common.exp.ExceptionUtil;
+import org.tianlangstudio.data.hamal.common.TaskResult;
 
 import java.util.Date;
 import java.util.concurrent.Callable;
@@ -16,7 +14,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.tianlangstuido.data.hamal.common.Consts.*;
+import static org.tianlangstudio.data.hamal.common.Consts.*;
 
 /**
  * Created by zhuhq on 2015/11/18.

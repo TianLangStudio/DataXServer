@@ -1,4 +1,4 @@
-package org.tianlangstuido.data.hamal.common.exp;
+package org.tianlangstudio.data.hamal.common.exp;
 
 /**
  * Created by zhuhq on 2016/4/27.

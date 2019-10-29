@@ -1,6 +1,6 @@
-package org.tianlangstuido.data.hamal.core
+package org.tianlangstudio.data.hamal.core
 
-import org.tianlangstuido.data.hamal.common.Consts
+import org.tianlangstudio.data.hamal.common.Consts
 
 /**
  * Created by zhuhq on 2016/4/27.
@@ -11,6 +11,7 @@ object Constants extends Consts{
   val AKKA_JOB_SCHEDULER_SYSTEM = "jobSchedulerSystem";
   val AKKA_JOB_SCHEDULER_ACTOR = "jobSchedulerActor";
   val AKKA_AM_ACTOR = "amActor";
+  val AKKA_CONFIG_FILE = "akka_config.conf";
   val AKKA_REMOTE_NETTY_PORT = "akka.remote.netty.port";
   val DATAX_MASTER_HOST = "datax.master.host";
   val DATAX_MASTER_PORT = "datax.master.port";

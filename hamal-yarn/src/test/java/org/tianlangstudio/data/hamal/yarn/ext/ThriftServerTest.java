@@ -7,14 +7,11 @@ import java.util.Map;
 
 import com.typesafe.config.ConfigFactory;
 import org.apache.commons.io.FileUtils;
-import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.protocol.TProtocol;
 import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TTransport;
-import org.apache.thrift.transport.TTransportException;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -23,7 +20,6 @@ import org.tianlangstudio.data.hamal.server.thrift.ThriftServer;
 import org.tianlangstudio.data.hamal.server.thrift.ThriftServerApp;
 import org.tianlangstudio.data.hamal.server.thrift.ThriftTaskCost;
 import org.tianlangstudio.data.hamal.server.thrift.ThriftTaskResult;
-import org.tianlangstuido.data.hamal.common.TaskResult;
 
 /**
  * Created by zhuhq on 2015/12/2.

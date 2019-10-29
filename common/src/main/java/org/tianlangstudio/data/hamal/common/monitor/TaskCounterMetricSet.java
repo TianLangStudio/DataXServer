@@ -1,4 +1,4 @@
-package org.tianlangstuido.data.hamal.common.monitor;
+package org.tianlangstudio.data.hamal.common.monitor;
 
 import com.codahale.metrics.Counter;
 import com.codahale.metrics.Metric;

@@ -1,6 +1,6 @@
 package org.tianlangstudio.data.hamal.yarn
 
-import org.tianlangstuido.data.hamal.common.TaskResult
+import org.tianlangstudio.data.hamal.common.TaskResult
 
 import scala.collection.mutable
 

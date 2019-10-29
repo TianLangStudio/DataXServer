@@ -1,10 +1,13 @@
-package org.tianlangstuido.data.hamal.common;
+package org.tianlangstudio.data.hamal.common;
 
-import org.tianlangstuido.data.hamal.common.exp.ExceptionUtil;
+import org.tianlangstudio.data.hamal.common.exp.ExceptionUtil;
 
-import static org.tianlangstuido.data.hamal.common.Consts.MSG_SUCCESS;
+import java.io.Serializable;
 
-public class TaskResult {
+import static org.tianlangstudio.data.hamal.common.Consts.MSG_SUCCESS;
+
+public class TaskResult implements Serializable {
+
     private boolean success = true;
     private String msg = "success";
     public TaskResult() {

@@ -53,17 +53,23 @@ public class Client {
                 Records.newRecord(ContainerLaunchContext.class);
 
         logger.info("log dir:{}", ApplicationConstants.LOG_DIR_EXPANSION_VAR);
-        String javaHome = System.getProperty("java.home");
-        String classpath = System.getProperty("java.class.path");
+
+        //String javaHome = System.getProperty("java.home");
+        //String classpath = System.getProperty("java.class.path");
+        //String javaHome = System.getenv("JAVA_HOME");
+        //String classpath = System.getenv("ClASSPATH");
+        String masterStartCmd =   Environment.JAVA_HOME.$() + "/bin/java" +
+                " -cp "  + Environment.CLASSPATH.$() +
+                " -Xmx256M " +
+                //" com.tianlangstudio.data.hamal.yarn.ApplicationMaster" +
+                ApplicationMaster.class.getName() +
+                " " + System.getProperty(YarnConfiguration.RM_SCHEDULER_ADDRESS) +
+                " 1>" + ApplicationConstants.LOG_DIR_EXPANSION_VAR + "/stdout" +
+                " 2>" + ApplicationConstants.LOG_DIR_EXPANSION_VAR + "/stderr";
+
         amContainer.setCommands(
                 Collections.singletonList(
-                        javaHome + "/bin/java" +
-                                " -classpath " +  classpath +
-                                " -Xmx256M" +
-                                " com.tianlangstudio.data.hamal.yarn.ApplicationMaster" +
-                                " " + System.getProperty(YarnConfiguration.RM_SCHEDULER_ADDRESS) +
-                                " 1>" + ApplicationConstants.LOG_DIR_EXPANSION_VAR + "/stdout" +
-                                " 2>" + ApplicationConstants.LOG_DIR_EXPANSION_VAR + "/stderr"
+                        masterStartCmd
                 )
         );
 

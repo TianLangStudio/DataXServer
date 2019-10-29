@@ -6,19 +6,17 @@ import java.util.UUID
 import akka.pattern.ask
 import akka.actor.ActorRef
 import akka.util.Timeout
-
 import org.apache.commons.codec.digest.DigestUtils
+import org.tianlangstudio.data.hamal.common.{TaskCost, TaskResult}
 
 import scala.concurrent.Await
 import scala.concurrent.duration._
-
-import org.tianlangstudio.data.hamal.core.ConfigUtil
+import org.tianlangstudio.data.hamal.core.{ConfigUtil, Constants}
 import org.tianlangstudio.data.hamal.server.thrift.ThriftServer
-import org.tianlangstudio.data.hamal.yarn.{CancelTask, TaskInfo, SubmitTask}
+import org.tianlangstudio.data.hamal.yarn.{CancelTask, SubmitTask, TaskInfo}
 import org.tianlangstudio.data.hamal.yarn.server.handler.AkkaTaskHandler
 import org.tianlangstudio.data.hamal.yarn.util.Utils
-import org.tianlangstuido.data.hamal.common.{TaskCost, TaskResult}
-import org.tianlangstuido.data.hamal.core.Constants
+import org.tianlangstudio.data.hamal.common.TaskCost
 /**
  * Created by zhuhq on 2016/4/27.
  */

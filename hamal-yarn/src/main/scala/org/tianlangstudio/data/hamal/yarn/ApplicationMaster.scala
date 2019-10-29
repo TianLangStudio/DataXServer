@@ -6,7 +6,7 @@ import java.util
 import java.util.{Collections, UUID}
 
 import akka.actor.Actor.Receive
-import akka.actor.{Actor, ActorLogging, Props}
+import akka.actor.{Actor, ActorLogging, ActorRef, Props}
 import akka.event.AddressTerminatedTopic
 import com.typesafe.config.{Config, ConfigFactory}
 import org.apache.hadoop.conf.Configuration
@@ -18,10 +18,14 @@ import org.apache.hadoop.yarn.client.api.async.AMRMClientAsync
 import org.apache.hadoop.yarn.conf.YarnConfiguration
 import org.apache.hadoop.yarn.util.Records
 import org.slf4j.LoggerFactory
+import org.tianlangstudio.data.hamal.core.{Constants, HamalConf}
+import org.tianlangstudio.data.hamal.core.handler.ITaskHandler
+import org.tianlangstudio.data.hamal.server.http.HttpServerApp
 import org.tianlangstudio.data.hamal.server.thrift.ThriftServerApp
+import org.tianlangstudio.data.hamal.yarn.server.handler.AkkaTaskHandler
 import org.tianlangstudio.data.hamal.yarn.thrift.AkkaThriftTaskHandler
 import org.tianlangstudio.data.hamal.yarn.util.{AkkaUtils, Utils}
-import org.tianlangstuido.data.hamal.core.{Constants, HamalConf}
+import org.tianlangstudio.data.hamal.core.HamalConf
 
 //import org.apache.log4j.PropertyConfigurator
 
@@ -34,16 +38,16 @@ object ApplicationMaster extends App {
    */
   //PropertyConfigurator.configure("masterConf/log4j.properties")
   private val logger = org.slf4j.LoggerFactory.getLogger(classOf[ApplicationMaster])
-  private val rmSchAddressOpt = if(args.length > 0) {
+  /*private val rmSchAddressOpt = if(args.length > 0) {
     Some(args(0))
   }else {
     None
-  }
+  }*/
 
   private val yarnConfiguration:Configuration = new YarnConfiguration()
-  if(rmSchAddressOpt.isDefined) {
+ /* if(rmSchAddressOpt.isDefined) {
     yarnConfiguration.set(YarnConfiguration.RM_SCHEDULER_ADDRESS, rmSchAddressOpt.get)
-  }
+  }*/
 
   logger.info("rm scheduler address:{}", yarnConfiguration.get(YarnConfiguration.RM_SCHEDULER_ADDRESS))
   logger.info(s"yarn configuration:$yarnConfiguration")
@@ -59,7 +63,7 @@ object ApplicationMaster extends App {
 
 
   executorResource = Records.newRecord(classOf[Resource])
-  executorResource.setMemory(1636)
+  executorResource.setMemory(1536)
   executorResource.setVirtualCores(executorCores)
 
   executorPriority = Records.newRecord(classOf[Priority])
@@ -78,30 +82,31 @@ object ApplicationMaster extends App {
   private val archiveName = Constants.DATAX_EXECUTOR_ARCHIVE_FILE_NAME
   private val dataxHome = hamalConf.getString(Constants.DATAX_HOME, ApplicationConstants.Environment.PWD.$())
 
-  private val runEnv = hamalConf.getString(Constants.RUN_ENV, Constants.RUN_ENV_PRODUCTION).toLowerCase()
+  //private val runEnv = hamalConf.getString(Constants.RUN_ENV, Constants.RUN_ENV_PRODUCTION).toLowerCase()
 
-  private val (executorCP, executorLocalCmd) = if(Constants.RUN_ENV_DEVELOPMENT.equals(runEnv)) {
-    val classPath = System.getProperty("java.class.path")
-    val localCmd =  s"java -classpath $classPath " +
-              s" -Ddatax.home=$dataxHome -Xms512M -Xmx1024M " +
-              s" -XX:PermSize=128M -XX:MaxPermSize=512M com.tianlangstudio.data.datax.Executor "
-    (classPath, localCmd)
-  }else {
-    val classPath = hamalConf.getString(
+  //获取ClassPath
+  private val executorCP = hamalConf.getString(
       Constants.DATAX_EXECUTOR_CP,
-      s"$archiveName/*:$archiveName/lib/*:$archiveName/common/*:$archiveName/conf/*:$archiveName/datax/*:$archiveName/datax/lib/*:$archiveName/datax/common/*:$archiveName/datax/conf/*"
-    )
-    val localCmd  = hamalConf.getString(Constants.DATAX_EXECUTOR_LOCAL_CMD, "./startLocalExecutor.sh")
-    (classPath, localCmd)
-  }
+      s"./*:$archiveName/*:$archiveName/lib/*:$archiveName/common/*:$archiveName/conf/*:$archiveName/datax/*:$archiveName/datax/lib/*:$archiveName/datax/common/*:$archiveName/datax/conf/*"
+  )
+
+  val cmdDefault =  s"java -classpath  $executorCP " +
+    s" -Ddatax.home=$dataxHome -Xms512M -Xmx1024M " +
+    s" -XX:PermSize=128M -XX:MaxPermSize=512M org.tianlangstudio.data.hamal.yarn.Executor" +
+    s"  $taskSchedulerHostPost"
+
+  val localCmdDefault = s"$cmdDefault ${Constants.PLACEHOLDER_EXECUTOR_ID}  ${Constants.EXECUTOR_RUN_ON_TYPE_LOCAL}"
+  val executorLocalCmd  = hamalConf.getString(Constants.DATAX_EXECUTOR_LOCAL_CMD, localCmdDefault)
+  logger.info(s"local executor start cmd:$executorLocalCmd")
 
   private val executorCmd:String = hamalConf.getString(
                 Constants.DATAX_EXECUTOR_CMD,
-                s"java -classpath $executorCP -Ddatax.home=$dataxHome -Xms512M -Xmx1024M -XX:PermSize=128M -XX:MaxPermSize=512M com.tianlangstudio.data.datax.Executor "
+                cmdDefault
               ) +
-              s" $taskSchedulerHostPost ${Constants.PLACEHOLDER_EXECUTOR_ID} ${Constants.EXECUTOR_RUN_ON_TYPE_YARN}" +
+              s"${Constants.PLACEHOLDER_EXECUTOR_ID} ${Constants.EXECUTOR_RUN_ON_TYPE_YARN}" +
               s" 1> ${ApplicationConstants.LOG_DIR_EXPANSION_VAR}/stdout " +
               s" 2> ${ApplicationConstants.LOG_DIR_EXPANSION_VAR}/stderr"
+  logger.info(s"yarn executor start cmd:$executorCmd");
   try {
     val hostPortWriter = new PrintWriter(new File("masterHostPort"),"UTF-8")
     hostPortWriter.print(taskSchedulerHostPost)
@@ -109,9 +114,7 @@ object ApplicationMaster extends App {
   }catch {
     case ex:Throwable =>
       logger.error("writer host port error",ex)
-
   }
-
   logger.info("executor cmd:" + executorCmd)
   def getContainerCmd(container: Container) = {
     val executorId = Utils.containerIdNodeId2ExecutorId(container.getId,container.getNodeId)
@@ -140,17 +143,24 @@ object ApplicationMaster extends App {
 
   logger.info(s"address:${taskSchedulerActor.path.address.hostPort}   ${taskSchedulerActor.path}  ${taskSchedulerActor.path.address}")
 
-  logger.info(s"start thrift server begin")
-  val thriftPort = hamalConf.getInt(Constants.THRIFT_SERVER_PORT,9777)
-  val thriftHost = hamalConf.getString(Constants.THRIFT_SERVER_HOST,"127.0.0.1")
-  val thriftConcurrence = hamalConf.getInt(Constants.THRIFT_SERVER_CONCURRENCE,8)
-  val thriftServerHandler = new AkkaThriftTaskHandler(taskSchedulerActor)
-
-  logger.info(s"start thrift server on  $thriftHost:$thriftPort")
-  try{
+  def startThriftServer(taskSchedulerActor: ActorRef, hamalConf: HamalConf): Unit = {
+    logger.info("start thrift server begin")
+    val thriftPort = hamalConf.getInt(Constants.THRIFT_SERVER_PORT,9777)
+    val thriftHost = hamalConf.getString(Constants.THRIFT_SERVER_HOST,"127.0.0.1")
+    val thriftServerHandler = new AkkaThriftTaskHandler(taskSchedulerActor)
+    logger.info(s"start thrift server on  $thriftHost:$thriftPort")
     ThriftServerApp.start(thriftHost,thriftPort,thriftServerHandler)
+  }
+  def startHttpServer(taskSchedulerActor: ITaskHandler, hamalConf: HamalConf): Unit = {
+    logger.info("start http server begin")
+    HttpServerApp.start(taskSchedulerActor, hamalConf)(schedulerSystem)
+  }
+  try{
+     startHttpServer(new AkkaTaskHandler(taskSchedulerActor), hamalConf)
+     startThriftServer(taskSchedulerActor, hamalConf)
   }catch {
     case ex:Exception =>
+      logger.error("start server error",ex)
       amrmClientAsync.unregisterApplicationMaster(FinalApplicationStatus.UNDEFINED,"","")
       schedulerSystem.terminate()
   }

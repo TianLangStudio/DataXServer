@@ -1,12 +1,13 @@
-package org.tianlangstuido.data.hamal.common;
+package org.tianlangstudio.data.hamal.common;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class TaskCost {
+public class TaskCost implements Serializable {
     private Date beginTime;
     private Date endTime;
     private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss SSS");

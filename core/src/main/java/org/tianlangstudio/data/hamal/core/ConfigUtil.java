@@ -11,8 +11,8 @@ import org.apache.commons.lang.StringUtils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.tianlangstuido.data.hamal.common.Consts;
-import org.tianlangstuido.data.hamal.common.exp.DataHamalException;
+import org.tianlangstudio.data.hamal.common.Consts;
+import org.tianlangstudio.data.hamal.common.exp.DataHamalException;
 
 
 /**

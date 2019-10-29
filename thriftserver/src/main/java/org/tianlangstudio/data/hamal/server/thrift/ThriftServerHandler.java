@@ -1,9 +1,9 @@
 package org.tianlangstudio.data.hamal.server.thrift;
 import org.tianlangstudio.data.hamal.core.handler.ITaskHandler;
 import org.tianlangstudio.data.hamal.core.handler.LocalServerHandler;
-import org.tianlangstuido.data.hamal.common.Consts;
-import org.tianlangstuido.data.hamal.common.TaskCost;
-import org.tianlangstuido.data.hamal.common.TaskResult;
+import org.tianlangstudio.data.hamal.common.Consts;
+import org.tianlangstudio.data.hamal.common.TaskCost;
+import org.tianlangstudio.data.hamal.common.TaskResult;
 
 import java.util.Map;
 

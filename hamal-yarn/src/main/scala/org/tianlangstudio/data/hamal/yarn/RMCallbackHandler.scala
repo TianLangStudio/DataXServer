@@ -3,7 +3,8 @@ package org.tianlangstudio.data.hamal.yarn
 import java.io.File
 import java.util.{Collections, List}
 
-import org.tianlangstuido.data.hamal.core.{Constants, HamalConf}
+import org.tianlangstudio.data.hamal.core.{Constants, HamalConf}
+import org.tianlangstudio.data.hamal.core.HamalConf
 //import java.util.Collections
 
 import org.apache.hadoop.conf.Configuration
@@ -57,7 +58,7 @@ class RMCallbackHandler(nmClient:NMClient,containerCmd:Container => String,hamal
 
         //ctx.setCommands(Collections.singletonList(""" echo "begin";sleep 900;echo "end"; """))
         ctx.setCommands(Collections.singletonList(containerCmd(container)))
-        val packagePath = hamalConf.getString(Constants.DATAX_EXECUTOR_FILE,"datax.zip");
+        val packagePath = hamalConf.getString(Constants.DATAX_EXECUTOR_FILE,"executor.zip");
         val archiveStat = FileSystem.get(yarnConfiguration).getFileStatus(new Path(packagePath))
         val  packageUrl = ConverterUtils.getYarnUrlFromPath(
           FileContext.getFileContext.makeQualified(new Path(packagePath)));

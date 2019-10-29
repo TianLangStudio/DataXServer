@@ -6,10 +6,10 @@ import scala.concurrent.Future
 import scala.concurrent.duration._
 import akka.actor._
 import org.slf4j.LoggerFactory
-import org.tianlangstudio.data.hamal.core.Engine
+import org.tianlangstudio.data.hamal.common.TaskResult
+import org.tianlangstudio.data.hamal.core.{Constants, Engine, HamalConf}
 import org.tianlangstudio.data.hamal.yarn.util.AkkaUtils
-import org.tianlangstuido.data.hamal.common.TaskResult
-import org.tianlangstuido.data.hamal.core.{Constants, HamalConf}
+import org.tianlangstudio.data.hamal.core.HamalConf
 
 
 

@@ -4,9 +4,9 @@ import java.util.Date
 
 import akka.actor.{Actor, ActorLogging, ActorRef}
 import akka.remote.transport.AssociationHandle.Disassociated
-
-import org.tianlangstuido.data.hamal.common.TaskResult
-import org.tianlangstuido.data.hamal.core.{Constants, HamalConf}
+import org.tianlangstudio.data.hamal.common.TaskResult
+import org.tianlangstudio.data.hamal.core.{Constants, HamalConf}
+import org.tianlangstudio.data.hamal.core.HamalConf
 
 import scala.collection.mutable
 import scala.concurrent.duration._

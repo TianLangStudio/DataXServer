@@ -4,11 +4,12 @@ import java.util.UUID
 
 import akka.actor.{Actor, ActorLogging, Props}
 import org.slf4j.LoggerFactory
+import org.tianlangstudio.data.hamal.core.{Constants, HamalConf}
 import org.tianlangstudio.data.hamal.server.thrift.ThriftServerApp
 import org.tianlangstudio.data.hamal.yarn.{ApplyExecutor, TaskScheduler}
 import org.tianlangstudio.data.hamal.yarn.thrift.AkkaThriftTaskHandler
 import org.tianlangstudio.data.hamal.yarn.util.AkkaUtils
-import org.tianlangstuido.data.hamal.core.{Constants, HamalConf}
+import org.tianlangstudio.data.hamal.core.HamalConf
 
 /**
  * Created by zhuhq on 2016/5/3.

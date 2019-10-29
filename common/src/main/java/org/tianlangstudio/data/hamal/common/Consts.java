@@ -1,4 +1,4 @@
-package org.tianlangstuido.data.hamal.common;
+package org.tianlangstudio.data.hamal.common;
 
 public interface Consts {
     //task

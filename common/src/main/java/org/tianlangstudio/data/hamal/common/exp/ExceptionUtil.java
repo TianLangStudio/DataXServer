@@ -1,4 +1,4 @@
-package org.tianlangstuido.data.hamal.common.exp;
+package org.tianlangstudio.data.hamal.common.exp;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 

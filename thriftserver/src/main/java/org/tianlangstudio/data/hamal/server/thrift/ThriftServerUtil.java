@@ -1,7 +1,7 @@
 package org.tianlangstudio.data.hamal.server.thrift;
 
-import org.tianlangstuido.data.hamal.common.TaskCost;
-import org.tianlangstuido.data.hamal.common.TaskResult;
+import org.tianlangstudio.data.hamal.common.TaskCost;
+import org.tianlangstudio.data.hamal.common.TaskResult;
 
 import java.util.Date;
 

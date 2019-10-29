@@ -6,19 +6,19 @@ import java.util.concurrent.TimeUnit
 import scala.concurrent.duration._
 import akka.actor.ActorRef
 import akka.util.Timeout
-import org.tianlangstudio.data.hamal.core.ConfigUtil
+import org.tianlangstudio.data.hamal.common.{TaskCost, TaskResult}
+import org.tianlangstudio.data.hamal.core.{ConfigUtil, Constants}
+import org.tianlangstudio.data.hamal.core.handler.ITaskHandler
 import org.tianlangstudio.data.hamal.server.thrift.{ThriftServerUtil, ThriftTaskCost, ThriftTaskResult}
 import org.tianlangstudio.data.hamal.yarn.{CancelTask, SubmitTask, TaskInfo}
 import org.tianlangstudio.data.hamal.yarn.util.Utils
-import org.tianlangstuido.data.hamal.common.{TaskCost, TaskResult}
-import org.tianlangstuido.data.hamal.core.Constants
-
+import org.tianlangstudio.data.hamal.common.TaskCost
 
 
 /**
  * Created by zhuhq on 2016/4/27.
  */
-class AkkaTaskHandler(taskSchedulerActor:ActorRef){
+class AkkaTaskHandler(taskSchedulerActor:ActorRef) extends ITaskHandler{
 
   implicit val timeout = Timeout(30, TimeUnit.SECONDS)
 

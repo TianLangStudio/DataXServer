@@ -10,7 +10,7 @@ import org.apache.thrift.transport.TServerSocket;
 import org.apache.thrift.transport.TServerTransport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.tianlangstuido.data.hamal.common.exp.DataHamalException;
+import org.tianlangstudio.data.hamal.common.exp.DataHamalException;
 
 /**
  * Created by zhuhq on 2015/11/30.

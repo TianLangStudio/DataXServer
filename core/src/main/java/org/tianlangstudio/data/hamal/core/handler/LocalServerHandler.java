@@ -2,8 +2,8 @@ package org.tianlangstudio.data.hamal.core.handler;
 
 
 import org.tianlangstudio.data.hamal.core.multithread.Worker;
-import org.tianlangstuido.data.hamal.common.TaskCost;
-import org.tianlangstuido.data.hamal.common.TaskResult;
+import org.tianlangstudio.data.hamal.common.TaskCost;
+import org.tianlangstudio.data.hamal.common.TaskResult;
 
 import java.util.Map;
 

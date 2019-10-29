@@ -1,4 +1,4 @@
-package org.tianlangstuido.data.hamal.core
+package org.tianlangstudio.data.hamal.core
 
 import com.typesafe.config.{Config, ConfigFactory}
 
