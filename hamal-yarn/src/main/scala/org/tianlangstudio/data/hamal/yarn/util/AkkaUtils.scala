@@ -57,27 +57,29 @@ private[hamal] object AkkaUtils{
     //akka.stdout-loglevel = "DEBUG"
     val akkaConf =
       //.withFallback(ConfigFactory.parseString(
-      conf.getConf.withFallback(
-            ConfigFactory.parseString(
-            s"""
-            |akka.loggers = ["akka.event.slf4j.Slf4jLogger"]
-            |akka.jvm-exit-on-fatal-error = off
-            |akka.remote.transport-failure-detector.heartbeat-interval = $akkaHeartBeatIntervalS s
-            |akka.remote.transport-failure-detector.acceptable-heartbeat-pause = $akkaHeartBeatPausesS s
-            |akka.actor.provider = "akka.remote.RemoteActorRefProvider"
-            |akka.remote.netty.tcp.transport-class = "akka.remote.transport.netty.NettyTransport"
-            |akka.remote.netty.tcp.hostname = "$host"
-            |akka.remote.netty.tcp.port = $port
-            |akka.remote.netty.tcp.connection-timeout = $akkaTimeoutS s
-            |akka.remote.netty.tcp.maximum-frame-size = ${akkaFrameSize}B
-            |akka.remote.netty.tcp.execution-pool-size = $akkaThreads
-            |akka.actor.default-dispatcher.throughput = $akkaBatchSize
-            |akka.log-config-on-start = $logAkkaConfig
-            |akka.remote.log-remote-lifecycle-events = $lifecycleEvents
-            |akka.log-dead-letters = $lifecycleEvents
-            |akka.log-dead-letters-during-shutdown = $lifecycleEvents
-            """.stripMargin)
-      ).withFallback(new HamalConf(Constants.AKKA_CONFIG_FILE).getConf)
+      ConfigFactory.parseString(
+      s"""
+         |akka.loggers = ["akka.event.slf4j.Slf4jLogger"]
+         |akka.jvm-exit-on-fatal-error = off
+         |akka.remote.transport-failure-detector.heartbeat-interval = $akkaHeartBeatIntervalS s
+         |akka.remote.transport-failure-detector.acceptable-heartbeat-pause = $akkaHeartBeatPausesS s
+         |akka.actor.provider = "akka.remote.RemoteActorRefProvider"
+         |akka.remote.netty.tcp.transport-class = "akka.remote.transport.netty.NettyTransport"
+         |akka.remote.netty.tcp.hostname = "$host"
+         |akka.remote.netty.tcp.port = $port
+         |akka.remote.netty.tcp.connection-timeout = $akkaTimeoutS s
+         |akka.remote.netty.tcp.maximum-frame-size = ${akkaFrameSize}B
+         |akka.remote.netty.tcp.execution-pool-size = $akkaThreads
+         |akka.actor.default-dispatcher.throughput = $akkaBatchSize
+         |akka.log-config-on-start = $logAkkaConfig
+         |akka.remote.log-remote-lifecycle-events = $lifecycleEvents
+         |akka.log-dead-letters = $lifecycleEvents
+         |akka.log-dead-letters-during-shutdown = $lifecycleEvents
+            """.stripMargin).withFallback(
+            conf.getConf
+          ).withFallback(
+             new HamalConf(Constants.AKKA_CONFIG_FILE).getConf
+         )
     //)
       println("tcp.port:" + akkaConf.getString("akka.remote.netty.tcp.port"))
       val actorSystem = ActorSystem(name, akkaConf)

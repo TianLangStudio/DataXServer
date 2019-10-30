@@ -96,7 +96,7 @@ class TaskScheduler(dataxConf:HamalConf, amActor:ActorRef) extends Actor with Ac
       acceptedTaskIds.add(taskId)
       rerunTaskIds.remove(taskId)
     case TaskCompleted(taskId,taskResult) =>
-      //log.info(s"task $taskId completed ${taskResult.success}   ${taskResult.getMsg}")
+      log.info(s"task $taskId completed ${taskResult.isSuccess}   ${taskResult.getMsg}")
       taskId2Result.put(taskId,taskResult);
       taskId2FailTimes.remove(taskId);
       taskId2ExecutorId.remove(taskId);

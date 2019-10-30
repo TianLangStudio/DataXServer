@@ -47,8 +47,8 @@
   cd DataXServer  
   mvn clean compile install -DskipTests
   ```
-  ### run http server (已部署好datax 且能正常运行job/test_job.json)
-  - 配置datax安装目录
+  ###　单机多线程模式运行http server (已部署好datax 且能正常运行job/test_job.json)
+  - 配置DataX安装目录
   > 修改pom.xml中的datax-home配置项为部署datax的地址
   ```xml
    <datax-home>/data/test/datax</datax-home>
@@ -71,6 +71,18 @@
   curl  127.0.0.1:9808/dataxserver/task/cost/0
 ```
 ![运行成功日志](https://raw.githubusercontent.com/TianLangStudio/DataXServer/master/images/test_job_success.png) 
+### 单机多进程模式运行
+- 配置DataX安装目录       
+        同多线程模式
+- 启动server
+ ```bash
+   cd hamal-yarn
+   mvn scala:run -Dlauncher=httpserver-mp -DskipTests
+  ```
+- 下同多线程模式  
+
+***如用在生产环境建议修改ID生成策略，提交任务存储方式等***　　
+           
 ## Document
 TODO
 ## 问题交流可加群

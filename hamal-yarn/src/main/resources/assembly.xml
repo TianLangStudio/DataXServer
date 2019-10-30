@@ -4,7 +4,7 @@
     <formats>
         <format>zip</format>
     </formats>
-    <includeBaseDirectory>true</includeBaseDirectory>
+    <includeBaseDirectory>false</includeBaseDirectory>
     <!--fileSets>
         <fileSet>
             <directory>src/main/bin</directory>
@@ -15,6 +15,12 @@
             <outputDirectory>config</outputDirectory>
         </fileSet>
     </fileSets-->
+    <fileSets>
+        <fileSet>
+            <directory>src/main/resources</directory>
+            <outputDirectory>conf</outputDirectory>
+        </fileSet>
+    </fileSets>
     <dependencySets>
         <dependencySet>
             <outputDirectory>lib</outputDirectory>

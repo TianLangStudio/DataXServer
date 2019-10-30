@@ -123,7 +123,7 @@
       <dependency>
           <groupId>org.apache.hadoop</groupId>
           <artifactId>hadoop-common</artifactId>
-          <scope>provided</scope>
+          <scope>compile</scope>
           <exclusions>
               <exclusion>
                   <groupId>org.slf4j</groupId>
@@ -331,6 +331,31 @@
                     <javacArg>${java.version}</javacArg>
                     <javacArg>-Xlint:all,-serial,-path</javacArg>
                 </javacArgs>
+                <launchers>
+                    <launcher>
+                        <id>httpserver</id>
+                        <mainClass>org.tianlangstudio.data.hamal.server.http.HttpServerApp</mainClass>
+                        <args>
+                            <!--并发度 使用多少个线程运行任务-->
+                            <arg>3</arg>
+                        </args>
+                        <jvmArgs>
+                            <jvmArg>-Ddatax.home=${datax-home}</jvmArg>
+                        </jvmArgs>
+                    </launcher>
+                    <launcher>
+                        <id>httpserver-mp</id>
+                        <mainClass>org.tianlangstudio.data.hamal.yarn.ApplicationMaster</mainClass>
+                        <args>
+                            <!--是否向yarn申请资源-->
+                            <arg>false</arg>
+                        </args>
+                        <jvmArgs>
+                            <jvmArg>-Ddatax.home=${datax-home}</jvmArg>
+                        </jvmArgs>
+                    </launcher>
+                </launchers>
+
             </configuration>
         </plugin>
         <plugin>

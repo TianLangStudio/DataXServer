@@ -32,34 +32,38 @@ import org.tianlangstudio.data.hamal.core.HamalConf
 //import scala.collection.JavaConversions._
 
 object ApplicationMaster extends App {
+  private val logger = org.slf4j.LoggerFactory.getLogger(classOf[ApplicationMaster])
+  private val hamalConf:HamalConf = new HamalConf()
+
 
   /**
    * 加载日志配置文件
    */
   //PropertyConfigurator.configure("masterConf/log4j.properties")
-  private val logger = org.slf4j.LoggerFactory.getLogger(classOf[ApplicationMaster])
-  /*private val rmSchAddressOpt = if(args.length > 0) {
-    Some(args(0))
+  //传递参数false 代表不是使用onyarn模式运行　只使用本机executor  即多进程模式运行任务
+  private val isOnYarn = if(args.length > 0) {
+    !"false".equalsIgnoreCase(args(0))
   }else {
-    None
-  }*/
+    true
+  }
 
-  private val yarnConfiguration:Configuration = new YarnConfiguration()
- /* if(rmSchAddressOpt.isDefined) {
-    yarnConfiguration.set(YarnConfiguration.RM_SCHEDULER_ADDRESS, rmSchAddressOpt.get)
-  }*/
+  val yarnConfiguration: Configuration = new YarnConfiguration()
+  /* if(rmSchAddressOpt.isDefined) {
+  yarnConfiguration.set(YarnConfiguration.RM_SCHEDULER_ADDRESS, rmSchAddressOpt.get)
+}*/
 
   logger.info("rm scheduler address:{}", yarnConfiguration.get(YarnConfiguration.RM_SCHEDULER_ADDRESS))
   logger.info(s"yarn configuration:$yarnConfiguration")
 
   //yarnConfiguration.setInt(YarnConfiguration.RM_AM_EXPIRY_INTERVAL_MS,1000 * 60 * 60 * 2)//设置单个 application超时时间 未起作用
 
-  private val hamalConf:HamalConf = new HamalConf()
 
-  private val executorCores = hamalConf.getInt(Constants.DATAX_EXECUTOR_CORES,1)
-  private var executorResource:Resource = Records.newRecord(classOf[Resource])
-  private var executorPriority:Priority = Records.newRecord(classOf[Priority])
-
+  val executorCores =
+  hamalConf.getInt(Constants.DATAX_EXECUTOR_CORES, 1)
+  var executorResource: Resource =
+  Records.newRecord(classOf[Resource])
+  var executorPriority: Priority =
+  Records.newRecord(classOf[Priority])
 
 
   executorResource = Records.newRecord(classOf[Resource])
@@ -69,6 +73,29 @@ object ApplicationMaster extends App {
   executorPriority = Records.newRecord(classOf[Priority])
   executorPriority.setPriority(0)
   executorPriority = Records.newRecord(classOf[Priority])
+
+  val nmClient:NMClient = NMClient.createNMClient()
+  logger.info("create amrmClientAsync");
+  val amrmClientAsync:AMRMClientAsync[AMRMClient.ContainerRequest] =
+    AMRMClientAsync.createAMRMClientAsync(2000,
+      new RMCallbackHandler(nmClient,getContainerCmd _,
+        hamalConf,yarnConfiguration))
+  logger.info("create amActor");
+
+
+  if(isOnYarn) {
+    amrmClientAsync.init(yarnConfiguration)
+    amrmClientAsync.start()
+
+    logger.info("register application master begin")
+    amrmClientAsync.registerApplicationMaster("",0,"")
+    logger.info("register application master end")
+    nmClient.init(yarnConfiguration)
+    nmClient.start();
+    sys.addShutdownHook{
+      amrmClientAsync.unregisterApplicationMaster(FinalApplicationStatus.UNDEFINED,"","")
+    }
+  }
 
   logger.info("create master actor system begin");
   val schedulerHost = hamalConf.getString(Constants.DATAX_MASTER_HOST,"127.0.0.1")
@@ -83,19 +110,21 @@ object ApplicationMaster extends App {
   private val dataxHome = hamalConf.getString(Constants.DATAX_HOME, ApplicationConstants.Environment.PWD.$())
 
   //private val runEnv = hamalConf.getString(Constants.RUN_ENV, Constants.RUN_ENV_PRODUCTION).toLowerCase()
-
+  val currentClassPath = System.getProperty("java.class.path")
   //获取ClassPath
   private val executorCP = hamalConf.getString(
       Constants.DATAX_EXECUTOR_CP,
-      s"./*:$archiveName/*:$archiveName/lib/*:$archiveName/common/*:$archiveName/conf/*:$archiveName/datax/*:$archiveName/datax/lib/*:$archiveName/datax/common/*:$archiveName/datax/conf/*"
+      s"./*:$archiveName/*:$archiveName/lib/*:$archiveName/common/*:" +
+        s"$archiveName/conf/*:$archiveName/datax/*:$archiveName/datax/lib/*:" +
+        s"$archiveName/datax/common/*:$archiveName/datax/conf/*:" +
+        s"$currentClassPath"
   )
 
   val cmdDefault =  s"java -classpath  $executorCP " +
     s" -Ddatax.home=$dataxHome -Xms512M -Xmx1024M " +
-    s" -XX:PermSize=128M -XX:MaxPermSize=512M org.tianlangstudio.data.hamal.yarn.Executor" +
-    s"  $taskSchedulerHostPost"
+    s" -XX:PermSize=128M -XX:MaxPermSize=512M org.tianlangstudio.data.hamal.yarn.Executor"
 
-  val localCmdDefault = s"$cmdDefault ${Constants.PLACEHOLDER_EXECUTOR_ID}  ${Constants.EXECUTOR_RUN_ON_TYPE_LOCAL}"
+  val localCmdDefault = s"$cmdDefault "
   val executorLocalCmd  = hamalConf.getString(Constants.DATAX_EXECUTOR_LOCAL_CMD, localCmdDefault)
   logger.info(s"local executor start cmd:$executorLocalCmd")
 
@@ -103,10 +132,19 @@ object ApplicationMaster extends App {
                 Constants.DATAX_EXECUTOR_CMD,
                 cmdDefault
               ) +
-              s"${Constants.PLACEHOLDER_EXECUTOR_ID} ${Constants.EXECUTOR_RUN_ON_TYPE_YARN}" +
+              s" $taskSchedulerHostPost ${Constants.PLACEHOLDER_EXECUTOR_ID} ${Constants.EXECUTOR_RUN_ON_TYPE_YARN}" +
               s" 1> ${ApplicationConstants.LOG_DIR_EXPANSION_VAR}/stdout " +
               s" 2> ${ApplicationConstants.LOG_DIR_EXPANSION_VAR}/stderr"
   logger.info(s"yarn executor start cmd:$executorCmd");
+  val amActor = schedulerSystem.actorOf(Props(classOf[ApplicationMaster],
+    hamalConf,
+    yarnConfiguration,
+    executorResource,
+    executorPriority,
+    amrmClientAsync,
+    nmClient),
+    Constants.AKKA_AM_ACTOR
+  )
   try {
     val hostPortWriter = new PrintWriter(new File("masterHostPort"),"UTF-8")
     hostPortWriter.print(taskSchedulerHostPost)
@@ -120,23 +158,6 @@ object ApplicationMaster extends App {
     val executorId = Utils.containerIdNodeId2ExecutorId(container.getId,container.getNodeId)
     executorCmd.replace(Constants.PLACEHOLDER_EXECUTOR_ID,executorId)
   }
-  private val nmClient:NMClient = NMClient.createNMClient()
-  private val amrmClientAsync:AMRMClientAsync[AMRMClient.ContainerRequest] = AMRMClientAsync.createAMRMClientAsync(2000,new RMCallbackHandler(nmClient,getContainerCmd _,hamalConf,yarnConfiguration))
-
-  amrmClientAsync.init(yarnConfiguration)
-
-  amrmClientAsync.start()
-
-  logger.info("register application master begin")
-  amrmClientAsync.registerApplicationMaster("",0,"")
-  logger.info("register application master end")
-  nmClient.init(yarnConfiguration)
-  nmClient.start();
-  sys.addShutdownHook{
-    amrmClientAsync.unregisterApplicationMaster(FinalApplicationStatus.UNDEFINED,"","")
-  }
-
-  val amActor = schedulerSystem.actorOf(Props(classOf[ApplicationMaster],hamalConf,yarnConfiguration,executorResource,executorPriority,amrmClientAsync,nmClient),Constants.AKKA_AM_ACTOR)
 
   val taskSchedulerActor = schedulerSystem.actorOf(Props(classOf[TaskScheduler],hamalConf,amActor),Constants.AKKA_JOB_SCHEDULER_ACTOR)
   taskSchedulerActor ! "taskSchedulerActor started"
@@ -161,7 +182,7 @@ object ApplicationMaster extends App {
   }catch {
     case ex:Exception =>
       logger.error("start server error",ex)
-      amrmClientAsync.unregisterApplicationMaster(FinalApplicationStatus.UNDEFINED,"","")
+      //amrmClientAsync.unregisterApplicationMaster(FinalApplicationStatus.UNDEFINED,"","")
       schedulerSystem.terminate()
   }
 
@@ -181,7 +202,12 @@ class ApplicationMaster(
 
   val containerLocalCmd = ApplicationMaster.executorLocalCmd
   def applyExecutor(count:Int = 1) = {
-    applyExecutorYarn(count)
+    if(aMRMClient != null  && nMClient != null) {
+      applyExecutorYarn(count)
+    }else {
+      log.warning("is not on yarn mode")
+    }
+
   }
   def applyExecutorLocal(count:Int = 1) = {
     val executorCount = math.max(count,1);
