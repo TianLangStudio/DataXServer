@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class TaskCost implements Serializable {
+    private static final long serialVersionUID = 1l;
     private Date beginTime;
     private Date endTime;
     private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss SSS");

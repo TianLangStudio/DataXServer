@@ -12,6 +12,7 @@
 - 5. 单机多进程方式运行
 - 6. 分布式运行(On Yarn)
 - 7. 混合模式运行（Yarn+多进程模式运行）
+- 8. 自动伸缩
 ## TODO
 - ~~1.Http Server~~   
 - ~~2.代码重构~~    
@@ -47,7 +48,7 @@
   cd DataXServer  
   mvn clean compile install -DskipTests
   ```
-  ###　单机多线程模式运行http server (已部署好datax 且能正常运行job/test_job.json)
+  ### 单机多线程模式运行http server (已部署好datax 且能正常运行job/test_job.json)
   - 配置DataX安装目录
   > 修改pom.xml中的datax-home配置项为部署datax的地址
   ```xml
@@ -62,7 +63,7 @@
   ```bash
   curl -XPOST -d "@测试文件路径" 127.0.0.1:9808/dataxserver/task
 ```
-  > tianlang@tianlang:job$ curl  -XPOST -d "@job/test_job.json" 127.0.0.1:9808/dataxserver/task
+  > tianlang@tianlang:job$ curl  -XPOST -d "@job/test_job.json" 127.0.0.1:9808/dataxserver/task  
   > 0 （任务ID）
   - 获取任务执行状态结果耗时
   ```bash
@@ -79,7 +80,42 @@
    cd hamal-yarn
    mvn scala:run -Dlauncher=httpserver-mp -DskipTests
   ```
-- 下同多线程模式  
+- 提交运行任务同多线程模式  
+
+### 多机多进程模式运行(On Yarn)
+- 配置DataX 安装目录
+修改hamal-yarn/src/main/resources/master.conf　里的datax.home配置项的值为
+DataX安装目录  
+- 打包
+```bash
+cd hamal-yarn
+mvn clean package -DskipTests
+
+```
+
+- 上传jar包到hdfs
+将hamal-yarn/target/hamal-yarn-*-with-dependencies.jar上传到hdfs /app/hamal/master.jar 
+将hamal-yarn/target/hamal-yarn-*-package.zip上传到hdfs /app/hamal/executor.zip
+```bash
+hdfs dfs -put hamal-yarn-*-with-dependencies.jar /app/hamal/master.jar
+hdfs dfs -put hamal-yarn-*-package.zip /app/hamal/executor.zip
+
+```
+
+- 运行Master
+```bash
+yarn -jar hamal-yarn-*_with-dependencies.jar  org.tianlangstudio.data.hamal.yarn.Client /app/hamal/master.jar
+```
+可以通过yarn　ui看到运行的Master
+
+- 提交运行任务同多线程模式
+
+提交任务后可看到，　container数量增加， master运行日志中可看到当前executor数量
+,在master.conf文件中可以配置最大executor数量，可以将local.num.max设置为不为０的值即代表可以在本机启动executor.
+executor空闲一段时间后自动销毁。
+
+![On Yarn](https://raw.githubusercontent.com/TianLangStudio/DataXServer/master/images/onyarn.png) 
+![Hamal Master On Yarn Log](https://raw.githubusercontent.com/TianLangStudio/DataXServer/master/images/yarn-log.png) 
 
 ***如用在生产环境建议修改ID生成策略，提交任务存储方式等***　　
            

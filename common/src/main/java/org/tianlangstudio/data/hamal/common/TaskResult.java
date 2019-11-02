@@ -7,7 +7,7 @@ import java.io.Serializable;
 import static org.tianlangstudio.data.hamal.common.Consts.MSG_SUCCESS;
 
 public class TaskResult implements Serializable {
-
+    private static final long serialVersionUID = 1l;
     private boolean success = true;
     private String msg = "success";
     public TaskResult() {
