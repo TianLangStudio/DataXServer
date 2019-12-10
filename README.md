@@ -120,15 +120,15 @@ executor空闲一段时间后自动销毁。
 ***如用在生产环境建议修改ID生成策略，提交任务存储方式等***　　
 
 ## QA
-> 编译失败
-检查是否是依赖包下载失败，可以将依赖包安装到本机  
-可以尝试注释掉pom文件中`recompileMode`配置  
-> 是否集群中每台机器都要安装datax  
-不需要每台机器都安装datax,可以把datax打包到excutor的部署zip包中，放到hdfs上  
-> Excutor和Master是通过http还是thrift通信？  
-Excutor和Master的通信是基于akka实现的  
-> Excutor的个数会随着任务个数增减？  
-是的，但不会大于配置的最大Excutor个数
+- 编译失败
+> 检查是否是依赖包下载失败，可以将依赖包安装到本机  
+> 可以尝试注释掉pom文件中`recompileMode`配置  
+- 是否集群中每台机器都要安装datax  
+> 不需要每台机器都安装datax,可以把datax打包到excutor的部署zip包中，放到hdfs上  
+- Excutor和Master是通过http还是thrift通信？  
+> Excutor和Master的通信是基于akka实现的  
+- Excutor的个数会随着任务个数增减？  
+> 是的，但不会大于配置的最大Excutor个数
            
 ## Document
 TODO
