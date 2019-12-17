@@ -104,7 +104,7 @@ hdfs dfs -put hamal-yarn-*-package.zip /app/hamal/executor.zip
 
 - 运行Master
 ```bash
-yarn -jar hamal-yarn-*_with-dependencies.jar  org.tianlangstudio.data.hamal.yarn.Client /app/hamal/master.jar
+yarn jar hamal-yarn-*_with-dependencies.jar  org.tianlangstudio.data.hamal.yarn.Client /app/hamal/master.jar
 ```
 可以通过yarn　ui看到运行的Master
 
