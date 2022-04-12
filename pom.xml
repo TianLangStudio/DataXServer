@@ -43,7 +43,7 @@
       <commons-lang-version>2.6</commons-lang-version>
       <commons-pool2-version>2.4.1</commons-pool2-version>
       <commons-dbcp-version>1.4</commons-dbcp-version>
-      <hadoop.version>2.6.1</hadoop.version>
+      <hadoop.version>3.2.3</hadoop.version>
       <dom4j.version>2.1.3</dom4j.version>
       <junit.version>4.13.1</junit.version>
       <scalatest.version>3.2.0-M1</scalatest.version>
