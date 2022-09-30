@@ -34,7 +34,7 @@
       <PermGen>64m</PermGen>
       <MaxPermGen>512m</MaxPermGen>
       <CodeCacheSize>512m</CodeCacheSize>
-      <scala.version>2.13.0</scala.version>
+      <scala.version>2.13.9</scala.version>
       <scala.binary.version>2.13</scala.binary.version>
       <slf4j-api-version>1.7.26</slf4j-api-version>
       <!--logback-classic-version>1.0.13</logback-classic-version-->
